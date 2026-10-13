@@ -4,7 +4,7 @@ import Hero from './components/Hero';
 import CollectionSection from './components/CollectionSection';
 import About from './components/About';
 import Footer from './components/Footer';
-import { indoorProducts, outdoorProducts } from './data/site';
+import { indoorGallery, outdoorGallery } from './data/gallery';
 
 export default function App() {
   return (
@@ -17,16 +17,18 @@ export default function App() {
           id="indoor"
           eyebrow="Indoor Collection"
           title="Comfort shaped for the rooms you love"
-          subtitle="Sofas, dining tables and bedroom pieces finished in natural fabrics and warm woods, made to soften every corner of your home."
-          items={indoorProducts}
+          subtitle="Rattan, cane and solid-wood pieces — accent chairs, side tables, sideboards and shelving — finished by hand to bring warmth to every corner of your home."
+          images={indoorGallery}
+          tileRatio={3 / 4}
           theme="indoor"
         />
         <CollectionSection
           id="outdoor"
           eyebrow="Outdoor Collection"
           title="Pieces made for open air and long evenings"
-          subtitle="Sun-ready loungers, dining sets and daybeds that carry the comfort of indoors out to your patio, garden or terrace."
-          items={outdoorProducts}
+          subtitle="Teak frames and hand-woven rope seating made for decks, gardens and terraces — built to weather the seasons in comfort."
+          images={outdoorGallery}
+          tileRatio={2 / 3}
           theme="outdoor"
         />
         <About />

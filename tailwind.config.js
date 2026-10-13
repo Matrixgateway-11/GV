@@ -43,10 +43,15 @@ export default {
           '0%, 100%': { opacity: '0.3' },
           '50%': { opacity: '1' },
         },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
       },
       animation: {
         'line-grow': 'lineGrow 1.2s ease-out forwards',
         shimmer: 'shimmer 3s ease-in-out infinite',
+        'fade-in': 'fadeIn 0.3s ease-out',
       },
     },
   },

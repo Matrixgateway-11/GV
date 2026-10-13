@@ -1,10 +1,8 @@
-import { useState } from 'react';
-import ProductCard from './ProductCard';
+import Gallery from './Gallery';
 import { useReveal } from '../hooks/useReveal';
-import type { Product } from '../data/site';
+import type { GalleryImage } from '../data/gallery';
 
-export type Accent = {
-  text: string;
+type Accent = {
   bg: string;
   bgSoft: string;
   chipBg: string;
@@ -13,14 +11,12 @@ export type Accent = {
 
 const accents: Record<'indoor' | 'outdoor', Accent> = {
   indoor: {
-    text: 'text-gold-600',
     bg: 'bg-gold-400',
     bgSoft: 'bg-gold-400/10',
     chipBg: 'bg-gold-400/15',
     chipText: 'text-gold-600',
   },
   outdoor: {
-    text: 'text-sage-600',
     bg: 'bg-sage-500',
     bgSoft: 'bg-sage-500/10',
     chipBg: 'bg-sage-500/15',
@@ -33,12 +29,13 @@ type CollectionSectionProps = {
   eyebrow: string;
   title: string;
   subtitle: string;
-  items: Product[];
+  images: GalleryImage[];
+  /** Width / height of a single gallery tile. */
+  tileRatio: number;
   theme: 'indoor' | 'outdoor';
 };
 
-export default function CollectionSection({ id, eyebrow, title, subtitle, items, theme }: CollectionSectionProps) {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+export default function CollectionSection({ id, eyebrow, title, subtitle, images, tileRatio, theme }: CollectionSectionProps) {
   const headerRef = useReveal();
   const accent = accents[theme];
 
@@ -59,19 +56,7 @@ export default function CollectionSection({ id, eyebrow, title, subtitle, items,
           <div className={`mt-8 mx-auto w-20 h-px ${accent.bg} origin-center animate-line-grow`} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-          {items.map((item, index) => (
-            <ProductCard
-              key={item.id}
-              item={item}
-              index={index}
-              isHovered={hoveredId === item.id}
-              onHover={() => setHoveredId(item.id)}
-              onLeave={() => setHoveredId(null)}
-              accent={accent}
-            />
-          ))}
-        </div>
+        <Gallery images={images} tileRatio={tileRatio} accentBg={accent.bg} label={eyebrow} />
       </div>
     </section>
   );
