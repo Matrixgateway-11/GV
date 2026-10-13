@@ -30,12 +30,10 @@ type CollectionSectionProps = {
   title: string;
   subtitle: string;
   images: GalleryImage[];
-  /** Width / height of a single gallery tile. */
-  tileRatio: number;
   theme: 'indoor' | 'outdoor';
 };
 
-export default function CollectionSection({ id, eyebrow, title, subtitle, images, tileRatio, theme }: CollectionSectionProps) {
+export default function CollectionSection({ id, eyebrow, title, subtitle, images, theme }: CollectionSectionProps) {
   const headerRef = useReveal();
   const accent = accents[theme];
 
@@ -56,7 +54,7 @@ export default function CollectionSection({ id, eyebrow, title, subtitle, images
           <div className={`mt-8 mx-auto w-20 h-px ${accent.bg} origin-center animate-line-grow`} />
         </div>
 
-        <Gallery images={images} tileRatio={tileRatio} accentBg={accent.bg} label={eyebrow} />
+        <Gallery images={images} accentBg={accent.bg} label={eyebrow} />
       </div>
     </section>
   );

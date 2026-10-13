@@ -87,38 +87,6 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /*
-   * Image gallery: fixed-height rows derived from the column width, so tall (1 col),
-   * wide (2 cols) and feature (2x2) tiles line up exactly. --tile-ratio = width / height
-   * of a single tile and is set per gallery.
-   */
-  .gallery {
-    container-type: inline-size;
-  }
-
-  .gallery-grid {
-    --cols: 2;
-    --gap: 0.75rem;
-    display: grid;
-    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-    gap: var(--gap);
-    grid-auto-rows: 16rem;
-    grid-auto-rows: calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols) / var(--tile-ratio, 0.75));
-  }
-
-  @media (min-width: 768px) {
-    .gallery-grid {
-      --cols: 4;
-      --gap: 1rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .gallery-grid {
-      --gap: 1.5rem;
-    }
-  }
-
   .glass {
     background: rgba(253, 251, 247, 0.85);
     backdrop-filter: blur(20px);

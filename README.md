@@ -16,7 +16,7 @@ npm run preview    # serve the production build
 ```
 src/
   data/site.ts              brand details, nav links, values, stats  <- edit content here
-  data/gallery.ts           indoor / outdoor gallery order and tile sizes
+  data/gallery.ts           indoor / outdoor photo lists (which ones are landscape)
   assets/hero.webp          hero background photo
   assets/gallery/           indoor-NN.webp / outdoor-NN.webp (+ -thumb.webp for the grid)
   App.tsx                   page composition + section headings
@@ -25,7 +25,7 @@ src/
     ScrollProgress.tsx      gold reading-progress bar
     Hero.tsx                full-bleed hero photo with mouse parallax
     CollectionSection.tsx   indoor (gold) / outdoor (sage) section header + gallery
-    Gallery.tsx             image-only 4-column grid (2 on phones), click to enlarge
+    Gallery.tsx             image-only grid, 4 per row (2 on phones), click to enlarge
     Lightbox.tsx            full-size viewer: arrows / keyboard / swipe, Esc to close
     About.tsx               story, stats, value cards
     Footer.tsx              CTA, link columns, contact, socials
@@ -33,18 +33,16 @@ src/
   hooks/
     useReveal.ts            IntersectionObserver scroll-reveal
     useScrollProgress.ts    rAF-throttled scroll progress
-  index.css                 reveal / zoom / glass / gold-gradient / gallery-grid styles
+  index.css                 reveal / zoom / glass / gold-gradient styles
 tailwind.config.js          cream / bark / gold / sage palette, fonts, keyframes
 ```
 
 ## Gallery
 
-Each gallery is a 4-column grid (2 columns on phones) where every row has the same height:
+Each gallery shows 4 photos per row (2 on phones), in file-number order. Every tile has the same
+3:4 shape: tall photos fill it, and landscape photos listed as `wide` in `src/data/gallery.ts`
+are shown whole over a blurred copy of themselves so furniture is never cropped off.
 
-- tall photos take 1 column
-- `wide(n)` photos take 2 columns, so landscape shots (sideboards, benches, sofas) are not cut off
-- `feature(n)` photos take 2 columns x 2 rows
-
-The order in `src/data/gallery.ts` is arranged so every row is completely filled. To add a photo,
-drop `indoor-23.webp` + `indoor-23-thumb.webp` into `src/assets/gallery/indoor/` and add `23`
-(or `wide(23)`) to the list, keeping tall photos in pairs.
+To add a photo, drop `indoor-23.webp` + `indoor-23-thumb.webp` (640px wide) into
+`src/assets/gallery/indoor/` - it appears automatically. If it is a landscape shot, add its
+number to the `wide` list.

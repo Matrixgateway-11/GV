@@ -19,7 +19,6 @@ export default function App() {
           title="Comfort shaped for the rooms you love"
           subtitle="Rattan, cane and solid-wood pieces — accent chairs, side tables, sideboards and shelving — finished by hand to bring warmth to every corner of your home."
           images={indoorGallery}
-          tileRatio={3 / 4}
           theme="indoor"
         />
         <CollectionSection
@@ -28,7 +27,6 @@ export default function App() {
           title="Pieces made for open air and long evenings"
           subtitle="Teak frames and hand-woven rope seating made for decks, gardens and terraces — built to weather the seasons in comfort."
           images={outdoorGallery}
-          tileRatio={2 / 3}
           theme="outdoor"
         />
         <About />
