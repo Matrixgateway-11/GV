@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #fdfbf7;
+    color: #1e1a12;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgba(201, 169, 110, 0.3);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f9f5ee;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #c9a96e;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b8975a;
+  }
+}
+
+@layer components {
+  /* Scroll-reveal: elements start offset + transparent, useReveal adds .is-visible */
+  .reveal {
+    opacity: 0;
+    transition:
+      opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal-up {
+    transform: translateY(60px);
+  }
+
+  .reveal-left {
+    transform: translateX(-80px);
+  }
+
+  .reveal-right {
+    transform: translateX(80px);
+  }
+
+  .reveal-scale {
+    transform: scale(0.9);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translate(0) scale(1);
+  }
+
+  .zoom-wrap {
+    overflow: hidden;
+  }
+
+  .zoom-img {
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  .zoom-wrap:hover .zoom-img {
+    transform: scale(1.08);
+  }
+
+  .gradient-gold {
+    background: linear-gradient(135deg, #c9a96e 0%, #b8975a 50%, #9d8048 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .glass {
+    background: rgba(253, 251, 247, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .reveal-up,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .zoom-img {
+    transition: none;
+  }
+}
