@@ -8,7 +8,7 @@ export const brand = {
   full: 'Golden Village',
   email: 'goldenvillageholdcom@gmail.com',
   phone: '+62 877-7060-8222',
-  address: '142 Design District, NY',
+  address: '142 Design District, Indonesia',
 };
 
 export type NavLink = { label: string; href: string };
