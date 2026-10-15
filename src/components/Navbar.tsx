@@ -84,7 +84,7 @@ export default function Navbar() {
           </nav>
 
           <button
-            onClick={() => go('#collection')}
+            onClick={() => go('#furnitures')}
             className={`hidden lg:inline-flex items-center px-6 py-2.5 rounded-full text-sm font-medium tracking-wide border transition-all duration-300 ${
               scrolled
                 ? 'border-gold-400 text-gold-600 hover:bg-gold-400 hover:text-cream-50'

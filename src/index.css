@@ -62,6 +62,12 @@
     transform: scale(0.9);
   }
 
+  /* Pops in: grows from slightly small with a gentle overshoot */
+  .reveal-pop {
+    transform: translateY(24px) scale(0.86);
+    transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
   .reveal.is-visible {
     opacity: 1;
     transform: translate(0) scale(1);
@@ -109,7 +115,8 @@
   .reveal-up,
   .reveal-left,
   .reveal-right,
-  .reveal-scale {
+  .reveal-scale,
+  .reveal-pop {
     opacity: 1;
     transform: none;
     transition: none;

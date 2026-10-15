@@ -1,10 +1,9 @@
 /**
- * Image-only gallery for the Indoor / Outdoor sections.
+ * Photos shown in the collection galleries.
  *
- * Photos live in src/assets/gallery/<folder>/<folder>-NN.webp (+ -thumb.webp for the grid)
- * and are shown in number order, 4 per row. Every tile has the same 3:4 shape: tall photos
- * fill it, while landscape photos (listed as `wide` below) are shown whole over a blurred
- * copy of themselves so furniture is never cropped off.
+ * The full photo library lives in src/assets/gallery/<folder>/<folder>-NN.webp
+ * (+ -thumb.webp for the grid). Only the photos picked below are shown; swap a
+ * number to feature a different photo. Tall photos suit the 3:4 tiles best.
  */
 
 export type GalleryImage = {
@@ -14,21 +13,38 @@ export type GalleryImage = {
   wide: boolean;
 };
 
+type Folder = 'indoor' | 'outdoor';
+
 const files = import.meta.glob<string>('../assets/gallery/*/*.webp', { eager: true, import: 'default' });
 
-function buildGallery(folder: 'indoor' | 'outdoor', label: string, wide: number[]): GalleryImage[] {
-  const prefix = `../assets/gallery/${folder}/`;
+const labels: Record<Folder, string> = { indoor: 'Indoor', outdoor: 'Outdoor' };
 
-  return Object.keys(files)
-    .filter((path) => path.startsWith(prefix) && !path.endsWith('-thumb.webp'))
-    .sort()
-    .map((path) => {
-      const n = Number(path.match(/-(\d+)\.webp$/)?.[1]);
-      const thumb = files[path.replace(/\.webp$/, '-thumb.webp')];
-      if (!thumb) throw new Error(`Missing thumbnail for ${path}`);
-      return { src: files[path], thumb, alt: `${label} furniture by Golden Village — photo ${n}`, wide: wide.includes(n) };
-    });
+/** Landscape photos — shown whole over a blurred copy of themselves instead of being cropped. */
+const widePhotos: Record<Folder, number[]> = {
+  indoor: [2, 3, 4, 10, 12, 16, 18, 21],
+  outdoor: [23, 25, 27, 28, 31],
+};
+
+function photo(folder: Folder, n: number): GalleryImage {
+  const name = `${folder}-${String(n).padStart(2, '0')}`;
+  const src = files[`../assets/gallery/${folder}/${name}.webp`];
+  const thumb = files[`../assets/gallery/${folder}/${name}-thumb.webp`];
+  if (!src || !thumb) throw new Error(`Missing gallery photo: ${folder}/${name}`);
+  return {
+    src,
+    thumb,
+    alt: `${labels[folder]} furniture by Golden Village — photo ${n}`,
+    wide: widePhotos[folder].includes(n),
+  };
 }
 
-export const indoorGallery = buildGallery('indoor', 'Indoor', [2, 3, 4, 10, 12, 16, 18, 21]);
-export const outdoorGallery = buildGallery('outdoor', 'Outdoor', [23, 25, 27, 28, 31]);
+// Row 1: indoor pieces (shelving, coffee table, rattan armchair)
+// Row 2: outdoor pieces (rocking chair, lounge chair, stool set)
+export const furnitureGallery: GalleryImage[] = [
+  photo('indoor', 14),
+  photo('indoor', 13),
+  photo('indoor', 20),
+  photo('outdoor', 16),
+  photo('outdoor', 6),
+  photo('outdoor', 17),
+];

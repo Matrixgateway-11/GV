@@ -63,7 +63,7 @@ export default function Hero() {
 
         <div ref={actionsRef} className="reveal reveal-up mt-12 flex justify-center">
           <button
-            onClick={() => scrollToSection('indoor')}
+            onClick={() => scrollToSection('furnitures')}
             className="group inline-flex items-center gap-3 px-8 py-4 rounded-full bg-cream-50/95 text-bark-800 font-medium tracking-wide hover:bg-gold-400 hover:text-cream-50 transition-all duration-400 shadow-lg"
           >
             <span>Our Collections</span>

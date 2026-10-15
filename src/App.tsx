@@ -4,7 +4,7 @@ import Hero from './components/Hero';
 import CollectionSection from './components/CollectionSection';
 import About from './components/About';
 import Footer from './components/Footer';
-import { indoorGallery, outdoorGallery } from './data/gallery';
+import { furnitureGallery } from './data/gallery';
 
 export default function App() {
   return (
@@ -14,20 +14,29 @@ export default function App() {
       <main>
         <Hero />
         <CollectionSection
-          id="indoor"
-          eyebrow="Indoor Collection"
-          title="Comfort shaped for the rooms you love"
-          subtitle="Rattan, cane and solid-wood pieces — accent chairs, side tables, sideboards and shelving — finished by hand to bring warmth to every corner of your home."
-          images={indoorGallery}
-          theme="indoor"
+          id="furnitures"
+          eyebrow="Our Furnitures Collection"
+          title="Comfort shaped for every space you love"
+          subtitle="Rattan, cane, teak and hand-woven rope — indoor and outdoor pieces finished by hand in Indonesia for homes around the world."
+          images={furnitureGallery}
+          theme="gold"
         />
         <CollectionSection
-          id="outdoor"
-          eyebrow="Outdoor Collection"
-          title="Pieces made for open air and long evenings"
-          subtitle="Teak frames and hand-woven rope seating made for decks, gardens and terraces — built to weather the seasons in comfort."
-          images={outdoorGallery}
-          theme="outdoor"
+          id="doors"
+          eyebrow="Our Doors Collection"
+          title="Doors that make an entrance"
+          subtitle="Our doors collection is coming to the website soon. Get in touch and we'll share the full range with you."
+          enquiry={{ label: 'Enquire about Doors', subject: 'Doors enquiry' }}
+          theme="sage"
+          tone="muted"
+        />
+        <CollectionSection
+          id="flooring"
+          eyebrow="Our Flooring Collection"
+          title="Flooring with natural character"
+          subtitle="Our flooring collection is coming to the website soon. Get in touch and we'll share the full range with you."
+          enquiry={{ label: 'Enquire about Flooring', subject: 'Flooring enquiry' }}
+          theme="gold"
         />
         <About />
       </main>

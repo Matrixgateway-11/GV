@@ -29,6 +29,7 @@ export default {
       },
       fontFamily: {
         serif: ['"Cormorant Garamond"', 'serif'],
+        display: ['Cinzel', '"Cormorant Garamond"', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       transitionDuration: {

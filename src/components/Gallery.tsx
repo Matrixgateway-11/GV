@@ -15,12 +15,12 @@ function GalleryTile({ image, index, accentBg, onOpen }: GalleryTileProps) {
   const ref = useReveal({ rootMargin: '0px 0px -60px 0px' });
 
   return (
-    <div ref={ref} className="reveal reveal-up" style={{ transitionDelay: `${(index % 4) * 80}ms` }}>
+    <div ref={ref} className="reveal reveal-pop" style={{ transitionDelay: `${(index % 3) * 120}ms` }}>
       <button
         type="button"
         onClick={onOpen}
         aria-label={`View ${image.alt}`}
-        className="zoom-wrap group relative block w-full aspect-[3/4] overflow-hidden rounded-xl bg-cream-200 shadow-[0_4px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_40px_rgba(0,0,0,0.12)] transition-shadow duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cream-50"
+        className="zoom-wrap group relative block w-full aspect-[3/4] overflow-hidden rounded-2xl bg-cream-200 shadow-[0_6px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_18px_50px_rgba(0,0,0,0.16)] hover:-translate-y-1.5 transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cream-50"
       >
         {image.wide && (
           <img
@@ -41,7 +41,7 @@ function GalleryTile({ image, index, accentBg, onOpen }: GalleryTileProps) {
         />
         <span className="absolute inset-0 bg-gradient-to-t from-bark-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <span
-          className={`absolute top-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center text-cream-50 ${accentBg} opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 group-focus-visible:opacity-100 group-focus-visible:scale-100 transition-all duration-400`}
+          className={`absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center text-cream-50 ${accentBg} opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 group-focus-visible:opacity-100 group-focus-visible:scale-100 transition-all duration-400`}
         >
           <Maximize2 size={14} />
         </span>
@@ -62,7 +62,7 @@ export default function Gallery({ images, accentBg, label }: GalleryProps) {
 
   return (
     <>
-      <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
+      <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {images.map((image, index) => (
           <GalleryTile
             key={image.src}

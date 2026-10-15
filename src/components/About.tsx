@@ -39,8 +39,8 @@ export default function About() {
             </h2>
             <p className="mt-6 text-bark-600/70 text-lg font-light leading-relaxed">
               {brand.full} began with one idea: the things we live with every day should make life feel a
-              little richer. Whether it&rsquo;s a cosy reading corner indoors or a breezy terrace outside, both
-              of our collections are made to bring lasting warmth and beauty to the places you call home.
+              little richer. Whether it&rsquo;s a cosy reading corner indoors or a breezy terrace outside, every
+              one of our collections is made to bring lasting warmth and beauty to the places you call home.
             </p>
             <div className="mt-8 flex items-center gap-6">
               {stats.map((stat, i) => (

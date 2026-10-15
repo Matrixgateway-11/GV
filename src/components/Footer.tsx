@@ -1,13 +1,13 @@
-import { Facebook, Instagram, Mail, MapPin, Phone, Sofa, Twitter } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import BrandLogo from './BrandLogo';
+import PinterestIcon from './PinterestIcon';
 import { brand } from '../data/site';
 import { scrollToSection } from '../utils/scroll';
 
 const collectionLinks = [
-  { label: 'Indoor Living', href: '#indoor' },
-  { label: 'Outdoor Living', href: '#outdoor' },
-  { label: 'Dining Sets', href: '#indoor' },
-  { label: 'Lounge & Daybeds', href: '#outdoor' },
+  { label: 'Furnitures', href: '#furnitures' },
+  { label: 'Doors', href: '#doors' },
+  { label: 'Flooring', href: '#flooring' },
 ];
 
 const companyLinks = ['About Us', 'Craftsmanship', 'Sustainability', 'Showroom'];
@@ -15,12 +15,13 @@ const companyLinks = ['About Us', 'Craftsmanship', 'Sustainability', 'Showroom']
 const socials = [
   { icon: Instagram, label: 'Instagram' },
   { icon: Facebook, label: 'Facebook' },
-  { icon: Twitter, label: 'Twitter' },
+  { icon: Linkedin, label: 'LinkedIn' },
+  { icon: PinterestIcon, label: 'Pinterest' },
 ];
 
 export default function Footer() {
   return (
-    <footer id="collection" className="relative bg-bark-900 text-cream-100 pt-20 pb-8 overflow-hidden">
+    <footer id="contact" className="relative bg-bark-900 text-cream-100 pt-20 pb-8 overflow-hidden">
       <div className="absolute top-0 left-1/4 w-[400px] h-[400px] rounded-full bg-gold-500/5 blur-3xl" />
       <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] rounded-full bg-sage-500/5 blur-3xl" />
 
@@ -30,7 +31,7 @@ export default function Footer() {
             Ready to reimagine <span className="gradient-gold italic font-medium">your home?</span>
           </h2>
           <p className="mt-4 text-cream-200/60 text-lg font-light max-w-xl mx-auto">
-            Drop by our showroom or book a one-on-one session with our design team.
+            Drop by our showroom or book a one-on-one session with us.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <a
@@ -50,13 +51,11 @@ export default function Footer() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Sofa size={24} className="text-gold-400" />
+            <div className="mb-4">
               <BrandLogo />
             </div>
             <p className="text-cream-200/50 text-sm font-light leading-relaxed">
-              Handcrafted furniture for indoor and outdoor living — two collections, one promise of timeless
-              design.
+              Handcrafted furniture, doors and flooring — made in Indonesia for homes around the world.
             </p>
           </div>
 
