@@ -6,8 +6,8 @@ export const brand = {
   first: 'Golden',
   second: 'Village',
   full: 'Golden Village',
-  email: 'hello@goldenvillage.com',
-  phone: '+1 (555) 234-7890',
+  email: 'goldenvillageholdcom@gmail.com',
+  phone: '+62 877-7060-8222',
   address: '142 Design District, NY',
 };
 
