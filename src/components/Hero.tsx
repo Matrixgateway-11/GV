@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, Sofa, Sparkles, Trees } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { useReveal } from '../hooks/useReveal';
 import { heroImage } from '../data/site';
 import { scrollToSection } from '../utils/scroll';
@@ -56,26 +56,17 @@ export default function Hero() {
 
         <div ref={copyRef} className="reveal reveal-up text-center mt-8 max-w-2xl mx-auto">
           <p className="text-cream-200/80 text-lg md:text-xl font-light leading-relaxed">
-            Thoughtfully made pieces for the rooms you live in and the gardens you escape to — two
-            collections shaped by a single standard of care.
+            Thoughtfully made pieces for the rooms you live in and the gardens you escape to — From
+            Indonesia to the World.
           </p>
         </div>
 
-        <div ref={actionsRef} className="reveal reveal-up mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div ref={actionsRef} className="reveal reveal-up mt-12 flex justify-center">
           <button
             onClick={() => scrollToSection('indoor')}
             className="group inline-flex items-center gap-3 px-8 py-4 rounded-full bg-cream-50/95 text-bark-800 font-medium tracking-wide hover:bg-gold-400 hover:text-cream-50 transition-all duration-400 shadow-lg"
           >
-            <Sofa size={18} />
-            <span>Indoor Collection</span>
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </button>
-          <button
-            onClick={() => scrollToSection('outdoor')}
-            className="group inline-flex items-center gap-3 px-8 py-4 rounded-full border border-cream-100/40 text-cream-50 font-medium tracking-wide hover:bg-sage-600 hover:border-sage-600 transition-all duration-400 backdrop-blur-sm"
-          >
-            <Trees size={18} />
-            <span>Outdoor Collection</span>
+            <span>Our Collections</span>
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>

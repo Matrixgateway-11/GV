@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Menu, Sofa, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 import { navLinks } from '../data/site';
 import { scrollToSection } from '../utils/scroll';
@@ -49,13 +49,7 @@ export default function Navbar() {
             scrolled ? 'h-16' : 'h-24'
           }`}
         >
-          <button onClick={() => go('#home')} className="flex items-center gap-2 group" aria-label="Go to top">
-            <Sofa
-              size={scrolled ? 22 : 26}
-              className={`transition-colors duration-300 ${
-                scrolled ? 'text-gold-500' : 'text-cream-50'
-              } group-hover:text-gold-400`}
-            />
+          <button onClick={() => go('#home')} className="flex items-center" aria-label="Go to top">
             <BrandLogo
               className={`transition-colors duration-300 ${scrolled ? 'text-bark-800' : 'text-cream-50'}`}
             />
