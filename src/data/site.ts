@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import { BadgeCheck, Factory, Handshake, Leaf, PencilRuler } from 'lucide-react';
 import heroPhoto from '../assets/hero.webp';
-import whyPhoto from '../assets/gallery/outdoor/outdoor-24.webp';
+import whyPhoto from '../assets/gallery/dining/dining-02.webp';
 import aboutPhoto from '../assets/gallery/indoor/indoor-05.webp';
 import aboutDetailPhoto from '../assets/gallery/indoor/indoor-11.webp';
 import contactPhoto from '../assets/gallery/outdoor/outdoor-27.webp';
@@ -129,7 +129,7 @@ export const reasons: Reason[] = [
   },
 ];
 
-export const whyImage = { src: whyPhoto, alt: 'Woven rope armchair with teak frame on a garden deck' };
+export const whyImage = { src: whyPhoto, alt: 'Teak dining table with hand-woven chairs on a sunlit terrace' };
 
 export const commitment = {
   quote: 'We are not just selling products — we are building long-term partnerships.',

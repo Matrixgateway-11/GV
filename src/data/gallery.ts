@@ -15,16 +15,18 @@ export type GalleryImage = {
   wide: boolean;
 };
 
-type Folder = 'indoor' | 'outdoor';
+type Folder = 'indoor' | 'outdoor' | 'chairs' | 'dining';
 
 const files = import.meta.glob<string>('../assets/gallery/*/*.webp', { eager: true, import: 'default' });
 
-const labels: Record<Folder, string> = { indoor: 'Indoor', outdoor: 'Outdoor' };
+const labels: Record<Folder, string> = { indoor: 'Indoor', outdoor: 'Outdoor', chairs: 'Seating', dining: 'Dining' };
 
 /** Landscape photos — shown whole over a blurred copy of themselves instead of being cropped. */
 const widePhotos: Record<Folder, number[]> = {
   indoor: [2, 3, 4, 10, 12, 16, 18, 21],
   outdoor: [23, 25, 27, 28, 31],
+  chairs: [2, 6, 7],
+  dining: [2, 3, 4, 5],
 };
 
 export function photo(folder: Folder, n: number): GalleryImage {

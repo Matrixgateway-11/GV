@@ -37,12 +37,12 @@ export default function Hero() {
       <div className="absolute inset-0 overflow-hidden">
         <img
           src={hero.image}
-          alt="Teak outdoor sofa on a garden deck"
+          alt="Teak outdoor sofa set on a sunny terrace with olive trees"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ transform: `translate(${mouse.x * 0.3}px, ${mouse.y * 0.3}px) scale(1.05)`, transition: 'transform 0.6s ease-out' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-bark-900/65 via-bark-900/25 to-bark-900/75" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(19,16,9,0.32)_0%,transparent_70%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-bark-900/65 via-bark-900/35 to-bark-900/75" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(19,16,9,0.45)_0%,transparent_70%)]" />
       </div>
 
       <div className="relative z-10 flex-1 flex items-center pt-28 pb-16">
