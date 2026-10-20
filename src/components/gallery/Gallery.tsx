@@ -1,17 +1,17 @@
 import { useCallback, useState } from 'react';
 import { Maximize2 } from 'lucide-react';
 import Lightbox from './Lightbox';
-import { useReveal } from '../hooks/useReveal';
-import type { GalleryImage } from '../data/gallery';
+import { useReveal } from '../../hooks/useReveal';
+import type { GalleryImage } from '../../data/gallery';
 
 type GalleryTileProps = {
   image: GalleryImage;
   index: number;
-  accentBg: string;
+  accentText: string;
   onOpen: () => void;
 };
 
-function GalleryTile({ image, index, accentBg, onOpen }: GalleryTileProps) {
+function GalleryTile({ image, index, accentText, onOpen }: GalleryTileProps) {
   const ref = useReveal({ rootMargin: '0px 0px -60px 0px' });
 
   return (
@@ -20,7 +20,7 @@ function GalleryTile({ image, index, accentBg, onOpen }: GalleryTileProps) {
         type="button"
         onClick={onOpen}
         aria-label={`View ${image.alt}`}
-        className="zoom-wrap group relative block w-full aspect-[3/4] overflow-hidden rounded-2xl bg-cream-200 shadow-[0_6px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_18px_50px_rgba(0,0,0,0.16)] hover:-translate-y-1.5 transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cream-50"
+        className="zoom-wrap group relative block w-full aspect-[3/4] overflow-hidden rounded-xl bg-cream-200 shadow-[0_2px_20px_rgba(19,16,9,0.06)] hover:shadow-[0_14px_40px_rgba(19,16,9,0.14)] transition-shadow duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cream-50"
       >
         {image.wide && (
           <img
@@ -39,11 +39,10 @@ function GalleryTile({ image, index, accentBg, onOpen }: GalleryTileProps) {
           decoding="async"
           className={`zoom-img absolute inset-0 w-full h-full ${image.wide ? 'object-contain' : 'object-cover'}`}
         />
-        <span className="absolute inset-0 bg-gradient-to-t from-bark-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        <span
-          className={`absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center text-cream-50 ${accentBg} opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 group-focus-visible:opacity-100 group-focus-visible:scale-100 transition-all duration-400`}
-        >
-          <Maximize2 size={14} />
+        <span className="absolute inset-0 bg-gradient-to-t from-bark-900/55 via-bark-900/0 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500" />
+        <span className="absolute left-4 bottom-4 inline-flex items-center gap-2 text-cream-50 text-[11px] font-medium uppercase tracking-[0.25em] opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 group-focus-visible:opacity-100 group-focus-visible:translate-y-0 transition-all duration-500">
+          <Maximize2 size={13} className={accentText} />
+          View
         </span>
       </button>
     </div>
@@ -52,23 +51,25 @@ function GalleryTile({ image, index, accentBg, onOpen }: GalleryTileProps) {
 
 type GalleryProps = {
   images: GalleryImage[];
-  accentBg: string;
   label: string;
+  /** Colour of the small icon on hover. */
+  accentText?: string;
+  className?: string;
 };
 
-export default function Gallery({ images, accentBg, label }: GalleryProps) {
+export default function Gallery({ images, label, accentText = 'text-gold-400', className = '' }: GalleryProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const close = useCallback(() => setOpenIndex(null), []);
 
   return (
     <>
-      <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+      <div className={`grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5 lg:gap-7 ${className}`}>
         {images.map((image, index) => (
           <GalleryTile
             key={image.src}
             image={image}
             index={index}
-            accentBg={accentBg}
+            accentText={accentText}
             onOpen={() => setOpenIndex(index)}
           />
         ))}

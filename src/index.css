@@ -8,7 +8,7 @@
   }
 
   body {
-    font-family: 'Poppins', system-ui, sans-serif;
+    font-family: 'Jost', system-ui, sans-serif;
     background: #fdfbf7;
     color: #1e1a12;
     overflow-x: hidden;
@@ -103,6 +103,19 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Horizontal swipe rows without a visible scrollbar */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 

@@ -14,43 +14,38 @@ npm run preview    # serve the production build
 
 ## Page
 
-Hero → What We Do (Furnitures / Doors / Wood Flooring) → Why Partner With Us → Who We Are + Our Commitment → Contact & footer
+Hero → What We Do (statement + Furnitures / Doors / Wood Flooring cards) → Furnitures → Doors →
+Wood Flooring → Why Partner With Us → Who We Are + Our Commitment → Get in Touch → footer
 
 ## Structure
 
 ```
 src/
-  data/site.ts              ALL site copy: brand + contact details, product lines, reasons, commitment  <- edit text here
-  data/gallery.ts           which photos the Furnitures gallery shows
-  assets/brand/             logo mark + wordmark cut out of the logo, in dark and light (cream) versions
-  assets/hero.webp          hero background photo
-  assets/gallery/           photo library: indoor-NN.webp / outdoor-NN.webp (+ -thumb.webp)
-  App.tsx                   page composition
+  data/site.ts        ALL site copy: brand + contact details, hero, product lines + specs, reasons, commitment  <- edit text here
+  data/gallery.ts     which of the furniture photos the Furnitures gallery shows
+  data/stock.ts       PLACEHOLDER Pexels photos for Doors / Wood Flooring — replace with real product photos
+  assets/brand/       logo mark (house + chair) in dark and light versions
+  assets/gallery/     furniture photo library: indoor-NN.webp / outdoor-NN.webp (+ -thumb.webp)
+  App.tsx             page composition
   components/
-    Navbar.tsx              fixed header, glass-on-scroll, active-section tracking, mobile menu, Request Catalog
-    BrandLogo.tsx           logo (mark + wordmark), cross-fades between dark / light versions
-    Hero.tsx                slogan, intro, Our Collections button, highlights
-    WhatWeDo.tsx            the three product lines; Furnitures has the photo gallery,
-                            Doors / Wood Flooring show a "gallery coming soon" panel until photos are added
-    Gallery.tsx             image-only grid, 3 per row (2 on phones), click to enlarge
-    Lightbox.tsx            full-size viewer: arrows / keyboard / swipe, Esc to close
-    WhyUs.tsx               "Why Partner With Us?" cards
-    About.tsx               Who We Are, audiences, Our Commitment
-    Footer.tsx              contact CTA (email + WhatsApp), links, contact details
-    SectionHeading.tsx      shared eyebrow + title + gold rule
-  hooks/                    useReveal (scroll-reveal), useScrollProgress
-  index.css                 reveal / zoom / glass / gold-gradient styles
-tailwind.config.js          cream / bark / gold / sage palette, fonts (Playfair Display + Poppins), keyframes
-public/                     favicon.png, apple-touch-icon.png
+    layout/           Navbar, Footer, BrandLogo, ScrollProgress
+    sections/         Hero, Intro, Furnitures, ProductFeature (Doors / Wood Flooring), WhyPartner, About, ContactCta
+    gallery/          Gallery (3 per row, 2 on phones, click to enlarge) + Lightbox
+    ui/               reusable building blocks: Button, Container, Reveal, SectionIntro + Label,
+                      SpecList, ImageCollage, PinterestIcon
+  hooks/              useReveal (scroll-reveal), useScrollProgress
+  index.css           reveal / zoom / glass / gold-gradient styles
+tailwind.config.js    cream / bark / gold / sage palette, fonts, keyframes (incl. marquee)
+public/               favicon.png, apple-touch-icon.png
 ```
 
 ## Fonts
 
-- **Playfair Display** — headings; the closest Google Font to the serif in the logo wordmark
-- **Poppins** — body text and labels; matches the logo's "FURNITURES • DOORS • FLOORING" tagline
+- **Cormorant Garamond** — headings and the GOLDEN VILLAGE wordmark
+- **Jost** — body text, labels and navigation (close to the logo's tagline)
 
-## Adding Doors / Flooring photos
+## Replacing the placeholder door / flooring photos
 
-Add the photos to `src/assets/gallery/` (as with indoor/outdoor), list them in `src/data/gallery.ts`,
-then render a `<Gallery images={...} />` in that product line's block in `src/components/WhatWeDo.tsx`
-in place of the "gallery coming soon" panel.
+`src/data/stock.ts` holds the Doors and Wood Flooring images (each has a `main`, `detail` and `card`
+photo). Add the real photos to `src/assets/`, import them there instead of the Pexels links, and the
+sections update automatically.

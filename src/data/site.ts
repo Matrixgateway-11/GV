@@ -1,7 +1,12 @@
 import type { LucideIcon } from 'lucide-react';
 import { BadgeCheck, Factory, Handshake, Leaf, PencilRuler } from 'lucide-react';
 import heroPhoto from '../assets/hero.webp';
+import furnitureCardPhoto from '../assets/gallery/indoor/indoor-07.webp';
+import whyPhoto from '../assets/gallery/outdoor/outdoor-24.webp';
 import aboutPhoto from '../assets/gallery/indoor/indoor-05.webp';
+import aboutDetailPhoto from '../assets/gallery/indoor/indoor-11.webp';
+import contactPhoto from '../assets/gallery/outdoor/outdoor-27.webp';
+import { doorImages, flooringImages, type StockImage } from './stock';
 
 /** All site copy lives here — edit text in this file rather than in the components. */
 
@@ -38,59 +43,93 @@ export const navLinks: NavLink[] = [
   { label: 'About', href: '#about' },
 ];
 
-export const heroImage = heroPhoto;
-export const heroHighlights = ['SVLK certified wood', 'OEM & ODM available', 'Worldwide shipping'];
+export const hero = {
+  image: heroPhoto,
+  eyebrow: 'Handcrafted Furniture House',
+  titleLine1: 'Every Room',
+  titleLine2: 'Deserves a Story',
+  text: 'Thoughtfully made pieces for the rooms you live in and the gardens you escape to — From Indonesia to the World.',
+};
+
+/** Scrolling strip under the hero. */
+export const marqueeItems = ['Furnitures', 'Doors', 'Wood Flooring', 'SVLK Certified', 'OEM & ODM', 'Worldwide Shipping', 'From Indonesia to the World'];
 
 export const intro = {
-  lead: 'Golden Village Furnitures is a trusted B2B exporter of premium furniture, solid and engineering wood doors, and wood flooring, based in the heart of Java, Indonesia.',
+  /** Shown as the large statement under "What We Do"; the brand name is highlighted. */
+  lead: 'is a trusted B2B exporter of premium furniture, solid and engineering wood doors, and wood flooring, based in the heart of Java, Indonesia.',
   partners:
     'We partner with importers, wholesalers, retailers, developers, and hospitality projects worldwide to deliver authentic Indonesian craftsmanship at export-quality standards.',
+  highlights: ['SVLK certified wood', 'OEM & ODM available', 'Worldwide shipping', 'Direct factory price'],
 };
 
 export const audiences = ['Importers', 'Wholesalers', 'Retailers', 'Developers', 'Hospitality projects'];
 
+export type Spec = { label: string; value: string };
+
 export type ProductLine = {
   id: 'furnitures' | 'doors' | 'flooring';
-  number: string;
   title: string;
-  eyebrow: string;
+  /** Small label above the title (kept different from the title itself). */
+  label: string;
   description: string;
-  materials: string[];
+  /** One-line summary on the overview cards. */
+  summary: string;
+  specs: Spec[];
+  card: { src: string; srcSet?: string; alt: string };
   enquiry: { label: string; subject: string };
 };
 
 export const productLines: ProductLine[] = [
   {
     id: 'furnitures',
-    number: '01',
     title: 'Furnitures',
-    eyebrow: 'Our Furnitures Collection',
+    label: 'Indoor & Outdoor',
     description:
       'Handcrafted indoor and outdoor furniture — rattan, teak, synthetic wicker, and combination materials. Designed for durability, comfort, and timeless elegance.',
-    materials: ['Rattan', 'Teak', 'Synthetic wicker', 'Combination materials'],
+    summary: 'Rattan, teak & synthetic wicker',
+    specs: [
+      { label: 'Materials', value: 'Rattan, teak, synthetic wicker & combination materials' },
+      { label: 'Range', value: 'Indoor and outdoor furniture' },
+    ],
+    card: { src: furnitureCardPhoto, alt: 'Handcrafted cane and solid wood armchair' },
     enquiry: { label: 'Request Furniture Catalog', subject: 'Furniture catalog request' },
   },
   {
     id: 'doors',
-    number: '02',
     title: 'Doors',
-    eyebrow: 'Our Doors Collection',
+    label: 'Solid & Engineered',
     description:
       'Solid and engineering doors — teak, merbau, and engineered wood. Custom sizes, carvings, and finishes for residential, commercial, and project needs.',
-    materials: ['Teak', 'Merbau', 'Engineered wood', 'Custom sizes', 'Carvings & finishes'],
+    summary: 'Teak, merbau & engineered wood',
+    specs: [
+      { label: 'Materials', value: 'Teak, merbau & engineered wood' },
+      { label: 'Options', value: 'Custom sizes, carvings & finishes' },
+      { label: 'Applications', value: 'Residential, commercial & project needs' },
+    ],
+    card: doorImages.card,
     enquiry: { label: 'Request Doors Catalog', subject: 'Doors catalog request' },
   },
   {
     id: 'flooring',
-    number: '03',
     title: 'Wood Flooring',
-    eyebrow: 'Our Flooring Collection',
+    label: 'Teak & Exotic Woods',
     description:
       'Premium solid and engineered wood flooring — teak and exotic woods. Sustainable, durable, and crafted for luxury living.',
-    materials: ['Solid wood', 'Engineered wood', 'Teak', 'Exotic woods'],
+    summary: 'Solid & engineered wood flooring',
+    specs: [
+      { label: 'Types', value: 'Solid & engineered wood flooring' },
+      { label: 'Species', value: 'Teak & exotic woods' },
+      { label: 'Qualities', value: 'Sustainable, durable & crafted for luxury living' },
+    ],
+    card: flooringImages.card,
     enquiry: { label: 'Request Flooring Catalog', subject: 'Wood flooring catalog request' },
   },
 ];
+
+export const featureImages: Record<'doors' | 'flooring', { main: StockImage; detail: StockImage }> = {
+  doors: doorImages,
+  flooring: flooringImages,
+};
 
 export type Reason = { icon: LucideIcon; title: string; description: string };
 
@@ -122,12 +161,20 @@ export const reasons: Reason[] = [
   },
 ];
 
-export const commitment =
-  'We are not just selling products — we are building long-term partnerships. From Central Java, Indonesia to your showroom anywhere in the world, we ensure quality that speaks for itself.';
+export const whyImage = { src: whyPhoto, alt: 'Woven rope armchair with teak frame on a garden deck' };
 
-export const aboutImage = aboutPhoto;
+export const commitment = {
+  quote: 'We are not just selling products — we are building long-term partnerships.',
+  text: 'From Central Java, Indonesia to your showroom anywhere in the world, we ensure quality that speaks for itself.',
+};
+
+export const aboutImages = {
+  main: { src: aboutPhoto, alt: 'Handcrafted solid wood stools and tables' },
+  detail: { src: aboutDetailPhoto, alt: 'Tall hand-woven rattan floor vases' },
+};
 
 export const contactCta = {
   title: "Let's Build Your Next Collection Together.",
   text: 'Contact us today for catalog, factory price list, and samples.',
+  image: contactPhoto,
 };

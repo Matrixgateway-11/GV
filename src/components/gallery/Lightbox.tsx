@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import type { GalleryImage } from '../data/gallery';
+import type { GalleryImage } from '../../data/gallery';
 
 type LightboxProps = {
   images: GalleryImage[];
