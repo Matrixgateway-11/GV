@@ -12,14 +12,18 @@ const url = (id: number, w: number) => `https://images.pexels.com/photos/${id}/p
 
 const pexels = (id: number, alt: string): GalleryImage => ({ src: url(id, 1600), thumb: url(id, 640), alt, wide: false });
 
+/** Single feature photos for the Doors and Flooring sections. */
+export const doorsFeature = pexels(12596661, 'Arched teak double door in a white stucco wall');
+export const flooringFeature = pexels(7027842, 'Elegant room with warm solid wood flooring and a chandelier');
+
 export const doorsGallery: GalleryImage[] = [
   pexels(14125257, 'Carved solid wood double doors on a classic facade'),
-  pexels(12596661, 'Arched teak double door in a white stucco wall'),
+  doorsFeature,
   pexels(13600510, 'Modern solid wood panel door in a minimalist hallway'),
 ];
 
 export const flooringGallery: GalleryImage[] = [
-  pexels(7027842, 'Elegant room with warm solid wood flooring and a chandelier'),
+  flooringFeature,
   pexels(368754, 'Close-up of light engineered wood floor planks'),
   pexels(3935327, 'Bright room with warm solid wood flooring'),
 ];

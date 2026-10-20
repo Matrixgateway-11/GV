@@ -19,7 +19,7 @@ export default function App() {
         <Intro />
         <ExploreCollections />
         <ProductSection id="furnitures" tone="muted" />
-        <ProductSection id="doors" />
+        <ProductSection id="doors" reverse />
         <ProductSection id="flooring" tone="muted" />
         <WhyPartner />
         <About />

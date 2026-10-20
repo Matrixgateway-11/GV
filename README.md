@@ -30,7 +30,7 @@ browser Back button closes it. Edit which photos go in which category in `src/da
 ```
 src/
   data/site.ts        ALL site copy: brand + contact details, hero, product lines + materials, reasons, commitment  <- edit text here
-  data/gallery.ts     which photos each product section shows (furniture photos picked from the library)
+  data/gallery.ts     photo library helper + the one feature photo (and "View the collection" link) per product section
   data/collections.ts the two "Explore the Collections" collections and their category photo lists
   data/stock.ts       PLACEHOLDER Pexels photos for the Doors / Flooring galleries — replace with real product photos
   assets/brand/       logo mark (house + chair) in dark and light versions

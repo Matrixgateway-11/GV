@@ -6,7 +6,7 @@
  * number to feature a different photo. Tall photos suit the 3:4 tiles best.
  */
 
-import { doorsGallery, flooringGallery } from './stock';
+import { doorsFeature, flooringFeature } from './stock';
 
 export type GalleryImage = {
   src: string;
@@ -43,20 +43,40 @@ export function photo(folder: Folder, n: number): GalleryImage {
   };
 }
 
-// Row 1: indoor pieces (shelving, coffee table, rattan armchair)
-// Row 2: outdoor pieces (rocking chair, lounge chair, stool set)
-export const furnitureGallery: GalleryImage[] = [
-  photo('indoor', 14),
-  photo('indoor', 13),
-  photo('indoor', 20),
-  photo('outdoor', 16),
-  photo('outdoor', 6),
-  photo('outdoor', 17),
-];
+/** One large photo per product section, plus where its "View the collection" link leads. */
+export type ProductFeature = {
+  src: string;
+  srcSet: string;
+  alt: string;
+  /** Small tag shown on the photo. */
+  caption: string;
+  /** Explore viewer to open: collection id + category id. */
+  explore: { collection: string; category: string; label: string };
+};
 
-/** Photos shown under each product section, keyed by product line id. */
-export const productGalleries: Record<'furnitures' | 'doors' | 'flooring', GalleryImage[]> = {
-  furnitures: furnitureGallery,
-  doors: doorsGallery,
-  flooring: flooringGallery,
+const feature = (image: GalleryImage, alt: string, caption: string, explore: ProductFeature['explore']): ProductFeature => ({
+  src: image.src,
+  srcSet: `${image.thumb} 640w, ${image.src} 1600w`,
+  alt,
+  caption,
+  explore,
+});
+
+export const productFeatures: Record<'furnitures' | 'doors' | 'flooring', ProductFeature> = {
+  // From the Living Set category
+  furnitures: feature(photo('dining', 4), 'Teak dining table with hand-woven chairs on a sunny terrace', 'Teak dining set', {
+    collection: 'furniture-crafts',
+    category: 'all',
+    label: 'Explore Furniture & Crafts',
+  }),
+  doors: feature(doorsFeature, doorsFeature.alt, 'Arched teak double doors', {
+    collection: 'doors-flooring',
+    category: 'doors',
+    label: 'View the Doors collection',
+  }),
+  flooring: feature(flooringFeature, flooringFeature.alt, 'Solid wood flooring', {
+    collection: 'doors-flooring',
+    category: 'flooring',
+    label: 'View the Flooring collection',
+  }),
 };

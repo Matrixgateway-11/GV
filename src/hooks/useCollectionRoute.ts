@@ -24,7 +24,8 @@ export function useCollectionRoute() {
   useEffect(() => {
     const sync = () => {
       const next = parse(window.location.hash);
-      if (!next) pushed.current = false;
+      // Reaching a view by navigation (an #explore/... link, or Forward) means there is an entry to go back to.
+      pushed.current = next !== null;
       setRoute(next);
     };
     window.addEventListener('popstate', sync);
