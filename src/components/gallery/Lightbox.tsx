@@ -41,13 +41,16 @@ export default function Lightbox({ images, index, label, onClose, onChange }: Li
 
   useEffect(() => {
     if (!open) return;
+    // Capture phase + stopPropagation: Esc closes only the photo, not a collection view underneath.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
       else if (e.key === 'ArrowRight') step(1);
       else if (e.key === 'ArrowLeft') step(-1);
+      else return;
+      e.stopImmediatePropagation();
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('keydown', onKey, true);
+    return () => window.removeEventListener('keydown', onKey, true);
   }, [open, step, onClose]);
 
   if (index === null) return null;

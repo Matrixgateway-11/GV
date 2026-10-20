@@ -27,7 +27,7 @@ const widePhotos: Record<Folder, number[]> = {
   outdoor: [23, 25, 27, 28, 31],
 };
 
-function photo(folder: Folder, n: number): GalleryImage {
+export function photo(folder: Folder, n: number): GalleryImage {
   const name = `${folder}-${String(n).padStart(2, '0')}`;
   const src = files[`../assets/gallery/${folder}/${name}.webp`];
   const thumb = files[`../assets/gallery/${folder}/${name}-thumb.webp`];

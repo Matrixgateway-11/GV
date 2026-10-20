@@ -51,12 +51,22 @@ export default {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        sheetIn: {
+          '0%': { opacity: '0', transform: 'translateY(28px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        sheetOut: {
+          '0%': { opacity: '1', transform: 'translateY(0)' },
+          '100%': { opacity: '0', transform: 'translateY(28px)' },
+        },
       },
       animation: {
         'line-grow': 'lineGrow 1.2s ease-out forwards',
         shimmer: 'shimmer 3s ease-in-out infinite',
         'fade-in': 'fadeIn 0.3s ease-out',
         marquee: 'marquee 40s linear infinite',
+        'sheet-in': 'sheetIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'sheet-out': 'sheetOut 0.25s ease-in both',
       },
     },
   },

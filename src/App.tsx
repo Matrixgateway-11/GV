@@ -3,6 +3,7 @@ import Navbar from './components/layout/Navbar';
 import ScrollProgress from './components/layout/ScrollProgress';
 import About from './components/sections/About';
 import ContactCta from './components/sections/ContactCta';
+import ExploreCollections from './components/sections/ExploreCollections';
 import Hero from './components/sections/Hero';
 import Intro from './components/sections/Intro';
 import ProductSection from './components/sections/ProductSection';
@@ -16,6 +17,7 @@ export default function App() {
       <main>
         <Hero />
         <Intro />
+        <ExploreCollections />
         <ProductSection id="furnitures" tone="muted" />
         <ProductSection id="doors" />
         <ProductSection id="flooring" tone="muted" />

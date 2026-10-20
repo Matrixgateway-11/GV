@@ -14,8 +14,16 @@ npm run preview    # serve the production build
 
 ## Page
 
-Hero → What We Do → Furnitures (+ photos) → Doors (+ photos) → Flooring (+ photos) →
-Why Partner With Us → Who We Are + Our Commitment → Get in Touch → footer
+Hero → What We Do → Explore the Collections → Furnitures (+ photos) → Doors (+ photos) →
+Flooring (+ photos) → Why Partner With Us → Who We Are + Our Commitment → Get in Touch → footer
+
+## Explore the Collections
+
+Two large cards — **Furniture & Crafts** and **Doors & Flooring**. Clicking one opens a full-screen
+collection view with category tabs (All, Chairs, Living Set, Tables, Lampshade, Rugs & Carpets /
+Doors, Flooring), photo counts and the click-to-enlarge viewer. Categories without photos show a
+"coming soon" panel. Each view has its own link, e.g. `/#explore/furniture-crafts/chairs`, and the
+browser Back button closes it. Edit which photos go in which category in `src/data/collections.ts`.
 
 ## Structure
 
@@ -23,17 +31,19 @@ Why Partner With Us → Who We Are + Our Commitment → Get in Touch → footer
 src/
   data/site.ts        ALL site copy: brand + contact details, hero, product lines + materials, reasons, commitment  <- edit text here
   data/gallery.ts     which photos each product section shows (furniture photos picked from the library)
+  data/collections.ts the two "Explore the Collections" collections and their category photo lists
   data/stock.ts       PLACEHOLDER Pexels photos for the Doors / Flooring galleries — replace with real product photos
   assets/brand/       logo mark (house + chair) in dark and light versions
   assets/gallery/     furniture photo library: indoor-NN.webp / outdoor-NN.webp (+ -thumb.webp)
   App.tsx             page composition
   components/
     layout/           Navbar, Footer, BrandLogo, ScrollProgress
-    sections/         Hero, Intro, ProductSection (Furnitures / Doors / Flooring), WhyPartner, About, ContactCta
+    sections/         Hero, Intro, ExploreCollections, ProductSection (Furnitures / Doors / Flooring), WhyPartner, About, ContactCta
+    collections/      CollectionViewer (full-screen collection view with category tabs)
     gallery/          Gallery (3 per row, 2 on phones, click to enlarge) + Lightbox
     ui/               reusable building blocks: Button, Chips, Container, Reveal, SectionIntro (+ Label,
                       SectionTitle), ImageCollage, PinterestIcon
-  hooks/              useReveal (scroll-reveal), useScrollProgress
+  hooks/              useReveal (scroll-reveal), useScrollProgress, useCollectionRoute (URL-linked collection views)
   index.css           reveal / zoom / glass / gold-gradient styles
 tailwind.config.js    cream / bark / gold / sage palette, fonts, keyframes (incl. marquee)
 public/               favicon.png, apple-touch-icon.png

@@ -23,3 +23,24 @@ export const flooringGallery: GalleryImage[] = [
   pexels(368754, 'Close-up of light engineered wood floor planks'),
   pexels(3935327, 'Bright room with warm solid wood flooring'),
 ];
+
+/** Fuller sets for the "Explore the Collections" Doors & Flooring view (same placeholder caveat). */
+export const doorsCatalog: GalleryImage[] = [
+  ...doorsGallery,
+  pexels(6015516, 'Hand-carved solid wood double doors'),
+  pexels(14118340, 'Ornate carved wooden door with an arched frame'),
+  pexels(8134757, 'Modern engineered wood doors set in wood-panelled walls'),
+];
+
+export const flooringCatalog: GalleryImage[] = [
+  ...flooringGallery,
+  pexels(7587861, 'Chevron parquet wood flooring in a modern kitchen'),
+  pexels(3935315, 'Living room with warm hardwood flooring'),
+  pexels(6835181, 'Spacious room with natural hardwood floors'),
+];
+
+export const doorsFlooringCover = {
+  src: url(12700466, 1400),
+  srcSet: [700, 1100, 1600].map((w) => `${url(12700466, w)} ${w}w`).join(', '),
+  alt: 'Home foyer with a solid wood door and warm wood flooring',
+};

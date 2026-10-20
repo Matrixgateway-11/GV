@@ -56,16 +56,19 @@ type GalleryProps = {
   label: string;
   /** Colour of the small icon on hover. */
   accentText?: string;
+  /** Tiles per row on large screens (2 on phones, 3 on tablets either way). */
+  columns?: 3 | 4;
   className?: string;
 };
 
-export default function Gallery({ images, label, accentText = 'text-gold-400', className = '' }: GalleryProps) {
+export default function Gallery({ images, label, accentText = 'text-gold-400', columns = 3, className = '' }: GalleryProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const close = useCallback(() => setOpenIndex(null), []);
+  const gridCols = columns === 4 ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3';
 
   return (
     <>
-      <div className={`grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5 lg:gap-7 ${className}`}>
+      <div className={`grid ${gridCols} gap-3 sm:gap-5 lg:gap-7 ${className}`}>
         {images.map((image, index) => (
           <GalleryTile
             key={image.src}
