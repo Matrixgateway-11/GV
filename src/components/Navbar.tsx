@@ -50,9 +50,7 @@ export default function Navbar() {
           }`}
         >
           <button onClick={() => go('#home')} className="flex items-center" aria-label="Go to top">
-            <BrandLogo
-              className={`transition-colors duration-300 ${scrolled ? 'text-bark-800' : 'text-cream-50'}`}
-            />
+            <BrandLogo tone={scrolled ? 'dark' : 'light'} />
           </button>
 
           <nav className="hidden lg:flex items-center gap-1">
@@ -70,7 +68,7 @@ export default function Navbar() {
                 <button
                   key={link.href}
                   onClick={() => go(link.href)}
-                  className={`relative px-5 py-2 text-sm font-medium tracking-wide transition-colors duration-300 ${color}`}
+                  className={`relative px-3 xl:px-5 py-2 text-sm font-medium tracking-wide transition-colors duration-300 ${color}`}
                 >
                   {link.label}
                   <span
@@ -84,14 +82,14 @@ export default function Navbar() {
           </nav>
 
           <button
-            onClick={() => go('#furnitures')}
-            className={`hidden lg:inline-flex items-center px-6 py-2.5 rounded-full text-sm font-medium tracking-wide border transition-all duration-300 ${
+            onClick={() => go('#contact')}
+            className={`hidden lg:inline-flex items-center px-5 xl:px-6 py-2.5 rounded-full text-sm font-medium tracking-wide border transition-all duration-300 ${
               scrolled
                 ? 'border-gold-400 text-gold-600 hover:bg-gold-400 hover:text-cream-50'
                 : 'border-cream-100/40 text-cream-50 hover:border-gold-400 hover:text-gold-400'
             }`}
           >
-            Explore Collection
+            Request Catalog
           </button>
 
           <button
@@ -118,6 +116,12 @@ export default function Navbar() {
               {link.label}
             </button>
           ))}
+          <button
+            onClick={() => go('#contact')}
+            className="mt-2 py-3 px-4 rounded-full bg-gold-400 text-bark-900 text-sm font-medium tracking-wide text-center hover:bg-gold-500 transition-colors"
+          >
+            Request Catalog
+          </button>
         </nav>
       </div>
     </header>

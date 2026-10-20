@@ -1,15 +1,32 @@
 import type { LucideIcon } from 'lucide-react';
-import { Eye, Hammer, Leaf, Shield } from 'lucide-react';
+import { BadgeCheck, Factory, Handshake, Leaf, PencilRuler } from 'lucide-react';
 import heroPhoto from '../assets/hero.webp';
+import aboutPhoto from '../assets/gallery/indoor/indoor-05.webp';
+
+/** All site copy lives here — edit text in this file rather than in the components. */
 
 export const brand = {
-  first: 'Golden',
-  second: 'Village',
-  full: 'Golden Village',
+  name: 'Golden Village Furnitures',
+  tagline: ['Furnitures', 'Doors', 'Flooring'],
+  slogan: 'From Indonesia to the World',
+  /** Used for the "Request Catalog" / enquiry buttons. */
   email: 'goldenvillageholdcom@gmail.com',
+  emails: ['admgoldenvillageholdcom@gmail.com', 'goldenvillageholdcom@gmail.com'],
   phone: '+62 877-7060-8222',
-  address: '142 Design District, Indonesia',
+  /** Same number in international format, for WhatsApp / tel: links. */
+  phoneDigits: '6287770608222',
+  website: 'www.goldenvillagefurnitureindonesia.com',
+  websiteUrl: 'http://www.goldenvillagefurnitureindonesia.com',
+  location: 'Central Java, Indonesia',
 };
+
+export const taglineText = brand.tagline.join(' • ');
+
+export const mailto = (subject: string) => `mailto:${brand.email}?subject=${encodeURIComponent(subject)}`;
+
+export const whatsappUrl = `https://wa.me/${brand.phoneDigits}?text=${encodeURIComponent(
+  `Hello ${brand.name}, I would like to request your catalog and factory price list.`,
+)}`;
 
 export type NavLink = { label: string; href: string };
 
@@ -21,40 +38,96 @@ export const navLinks: NavLink[] = [
   { label: 'About', href: '#about' },
 ];
 
-const pexels = (id: number, w = 940, h = 650) =>
-  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&h=${h}&w=${w}`;
-
 export const heroImage = heroPhoto;
+export const heroHighlights = ['SVLK certified wood', 'OEM & ODM available', 'Worldwide shipping'];
 
-export const aboutImage = pexels(13068373, 1000, 800);
+export const intro = {
+  lead: 'Golden Village Furnitures is a trusted B2B exporter of premium furniture, solid and engineering wood doors, and wood flooring, based in the heart of Java, Indonesia.',
+  partners:
+    'We partner with importers, wholesalers, retailers, developers, and hospitality projects worldwide to deliver authentic Indonesian craftsmanship at export-quality standards.',
+};
 
-export type Value = { icon: LucideIcon; title: string; description: string };
+export const audiences = ['Importers', 'Wholesalers', 'Retailers', 'Developers', 'Hospitality projects'];
 
-export const values: Value[] = [
+export type ProductLine = {
+  id: 'furnitures' | 'doors' | 'flooring';
+  number: string;
+  title: string;
+  eyebrow: string;
+  description: string;
+  materials: string[];
+  enquiry: { label: string; subject: string };
+};
+
+export const productLines: ProductLine[] = [
   {
-    icon: Hammer,
-    title: 'Artisan Craft',
-    description: 'Every piece is finished by hand by makers skilled in joinery, carving and upholstery.',
+    id: 'furnitures',
+    number: '01',
+    title: 'Furnitures',
+    eyebrow: 'Our Furnitures Collection',
+    description:
+      'Handcrafted indoor and outdoor furniture — rattan, teak, synthetic wicker, and combination materials. Designed for durability, comfort, and timeless elegance.',
+    materials: ['Rattan', 'Teak', 'Synthetic wicker', 'Combination materials'],
+    enquiry: { label: 'Request Furniture Catalog', subject: 'Furniture catalog request' },
+  },
+  {
+    id: 'doors',
+    number: '02',
+    title: 'Doors',
+    eyebrow: 'Our Doors Collection',
+    description:
+      'Solid and engineering doors — teak, merbau, and engineered wood. Custom sizes, carvings, and finishes for residential, commercial, and project needs.',
+    materials: ['Teak', 'Merbau', 'Engineered wood', 'Custom sizes', 'Carvings & finishes'],
+    enquiry: { label: 'Request Doors Catalog', subject: 'Doors catalog request' },
+  },
+  {
+    id: 'flooring',
+    number: '03',
+    title: 'Wood Flooring',
+    eyebrow: 'Our Flooring Collection',
+    description:
+      'Premium solid and engineered wood flooring — teak and exotic woods. Sustainable, durable, and crafted for luxury living.',
+    materials: ['Solid wood', 'Engineered wood', 'Teak', 'Exotic woods'],
+    enquiry: { label: 'Request Flooring Catalog', subject: 'Wood flooring catalog request' },
+  },
+];
+
+export type Reason = { icon: LucideIcon; title: string; description: string };
+
+export const reasons: Reason[] = [
+  {
+    icon: Handshake,
+    title: 'B2B Focused',
+    description: 'We understand bulk orders, custom specifications, and project timelines.',
+  },
+  {
+    icon: BadgeCheck,
+    title: 'Export Quality',
+    description: 'Strict QC, proper packing, and on-time shipment worldwide.',
+  },
+  {
+    icon: PencilRuler,
+    title: 'Custom Made',
+    description: 'OEM & ODM available — your design, our craftsmanship.',
   },
   {
     icon: Leaf,
-    title: 'Responsible Materials',
-    description: 'We build with certified timber and recycled fabrics so each collection treads lightly.',
+    title: 'Sustainable Source',
+    description: 'Legally sourced wood, SVLK certified.',
   },
   {
-    icon: Eye,
-    title: 'Enduring Design',
-    description: 'Silhouettes that outlast seasons and trends — furniture made to be handed down.',
-  },
-  {
-    icon: Shield,
-    title: 'Built to Last',
-    description: 'Each frame carries a lifetime structural warranty, because good furniture should stay.',
+    icon: Factory,
+    title: 'Competitive Factory Price',
+    description: 'Direct from manufacturer.',
   },
 ];
 
-export const stats = [
-  { value: '12+', label: 'Years of craft' },
-  { value: '200+', label: 'Unique pieces' },
-  { value: '50k', label: 'Homes styled' },
-];
+export const commitment =
+  'We are not just selling products — we are building long-term partnerships. From Central Java, Indonesia to your showroom anywhere in the world, we ensure quality that speaks for itself.';
+
+export const aboutImage = aboutPhoto;
+
+export const contactCta = {
+  title: "Let's Build Your Next Collection Together.",
+  text: 'Contact us today for catalog, factory price list, and samples.',
+};

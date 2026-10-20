@@ -33,7 +33,7 @@ function photo(folder: Folder, n: number): GalleryImage {
   return {
     src,
     thumb,
-    alt: `${labels[folder]} furniture by Golden Village — photo ${n}`,
+    alt: `${labels[folder]} furniture by Golden Village Furnitures — photo ${n}`,
     wide: widePhotos[folder].includes(n),
   };
 }
