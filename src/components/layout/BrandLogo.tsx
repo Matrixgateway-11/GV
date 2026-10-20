@@ -29,7 +29,7 @@ export default function BrandLogo({ tone, layout = 'inline', className = '' }: B
       <span className={`inline-flex items-center gap-4 ${className}`} aria-label="Golden Village Furnitures">
         <Mark tone={tone} className="h-16" />
         <span className="flex flex-col">
-          <span className="gradient-gold font-serif font-semibold uppercase tracking-[0.16em] text-[1.6rem] leading-none">Golden Village</span>
+          <span className="gradient-gold font-serif font-medium uppercase tracking-[0.12em] text-[1.45rem] leading-none">Golden Village</span>
           <span className={`mt-2 text-[10px] font-medium uppercase tracking-[0.5em] ${subTone}`}>Furnitures</span>
           <span className="mt-3 text-[9px] uppercase tracking-[0.3em] text-gold-400/80">{taglineText}</span>
         </span>
@@ -41,7 +41,7 @@ export default function BrandLogo({ tone, layout = 'inline', className = '' }: B
     <span className={`inline-flex items-center gap-3 ${className}`} aria-label="Golden Village Furnitures">
       <Mark tone={tone} className="h-10 sm:h-11" />
       <span className="flex flex-col">
-        <span className="gradient-gold font-serif font-semibold uppercase tracking-[0.14em] text-[1.05rem] sm:text-[1.2rem] leading-none">
+        <span className="gradient-gold font-serif font-medium uppercase tracking-[0.1em] text-[1rem] sm:text-[1.1rem] leading-none">
           Golden Village
         </span>
         <span className={`mt-1.5 text-[8.5px] sm:text-[9px] font-medium uppercase tracking-[0.55em] transition-colors duration-300 ${subTone}`}>

@@ -6,6 +6,8 @@
  * number to feature a different photo. Tall photos suit the 3:4 tiles best.
  */
 
+import { doorsGallery, flooringGallery } from './stock';
+
 export type GalleryImage = {
   src: string;
   thumb: string;
@@ -48,3 +50,10 @@ export const furnitureGallery: GalleryImage[] = [
   photo('outdoor', 6),
   photo('outdoor', 17),
 ];
+
+/** Photos shown under each product section, keyed by product line id. */
+export const productGalleries: Record<'furnitures' | 'doors' | 'flooring', GalleryImage[]> = {
+  furnitures: furnitureGallery,
+  doors: doorsGallery,
+  flooring: flooringGallery,
+};

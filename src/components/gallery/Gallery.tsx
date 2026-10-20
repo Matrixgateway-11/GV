@@ -7,20 +7,22 @@ import type { GalleryImage } from '../../data/gallery';
 type GalleryTileProps = {
   image: GalleryImage;
   index: number;
+  /** Span both columns on phones (used to avoid a lone last tile in odd-sized galleries). */
+  spanOnPhone?: boolean;
   accentText: string;
   onOpen: () => void;
 };
 
-function GalleryTile({ image, index, accentText, onOpen }: GalleryTileProps) {
+function GalleryTile({ image, index, spanOnPhone = false, accentText, onOpen }: GalleryTileProps) {
   const ref = useReveal({ rootMargin: '0px 0px -60px 0px' });
 
   return (
-    <div ref={ref} className="reveal reveal-pop" style={{ transitionDelay: `${(index % 3) * 120}ms` }}>
+    <div ref={ref} className={`reveal reveal-pop ${spanOnPhone ? 'col-span-2 sm:col-span-1' : ''}`} style={{ transitionDelay: `${(index % 3) * 120}ms` }}>
       <button
         type="button"
         onClick={onOpen}
         aria-label={`View ${image.alt}`}
-        className="zoom-wrap group relative block w-full aspect-[3/4] overflow-hidden rounded-xl bg-cream-200 shadow-[0_2px_20px_rgba(19,16,9,0.06)] hover:shadow-[0_14px_40px_rgba(19,16,9,0.14)] transition-shadow duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cream-50"
+        className={`zoom-wrap group relative block w-full ${spanOnPhone ? 'aspect-[4/3] sm:aspect-[3/4]' : 'aspect-[3/4]'} overflow-hidden rounded-xl bg-cream-200 shadow-[0_2px_20px_rgba(19,16,9,0.06)] hover:shadow-[0_14px_40px_rgba(19,16,9,0.14)] transition-shadow duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cream-50`}
       >
         {image.wide && (
           <img
@@ -69,6 +71,7 @@ export default function Gallery({ images, label, accentText = 'text-gold-400', c
             key={image.src}
             image={image}
             index={index}
+            spanOnPhone={index === 0 && images.length % 2 === 1}
             accentText={accentText}
             onOpen={() => setOpenIndex(index)}
           />

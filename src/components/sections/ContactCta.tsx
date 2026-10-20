@@ -25,15 +25,15 @@ export default function ContactCta() {
       <img src={contactCta.image} alt="" aria-hidden="true" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-45" />
       <div className="absolute inset-0 bg-gradient-to-r from-bark-900 via-bark-900/90 to-bark-900/55" />
 
-      <Container className="relative py-24 lg:py-32">
+      <Container className="relative py-20 lg:py-28">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <Reveal className="lg:col-span-7 min-w-0">
             <Label tone="dark">Get in Touch</Label>
-            <h2 className="mt-5 font-serif font-medium text-cream-50 text-[2.5rem] leading-[1.05] sm:text-5xl lg:text-[4rem] tracking-[-0.01em] text-balance">
+            <h2 className="mt-4 font-serif font-normal text-cream-50 text-[2.25rem] leading-[1.08] sm:text-[2.75rem] lg:text-[3.4rem] tracking-[-0.015em] text-balance">
               Let&rsquo;s Build Your <span className="gradient-gold italic">Next Collection</span> Together.
             </h2>
-            <p className="mt-6 max-w-xl text-lg font-light text-cream-200/75">{contactCta.text}</p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4">
+            <p className="mt-5 max-w-xl text-base sm:text-lg text-cream-200/75">{contactCta.text}</p>
+            <div className="mt-9 flex flex-col sm:flex-row gap-4">
               <Button variant="gold" href={mailto('Catalog, factory price list & samples request')} icon={<Mail size={16} />}>
                 Request Catalog
               </Button>

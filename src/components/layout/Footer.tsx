@@ -27,7 +27,7 @@ export default function Footer() {
     <footer className="relative bg-[#0e0c07] text-cream-100 pt-16 lg:pt-20 pb-8 overflow-hidden">
       <Container>
         <div className="grid grid-cols-2 lg:grid-cols-12 gap-x-6 gap-y-12 lg:gap-10 pb-12 border-b border-cream-100/10">
-          <div className="col-span-2 lg:col-span-5">
+          <div className="col-span-2 lg:col-span-4">
             <BrandLogo tone="light" layout="stacked" />
             <p className="mt-6 max-w-sm text-sm font-light leading-relaxed text-cream-200/55">
               Trusted B2B exporter of premium furniture, wood doors and wood flooring from {brand.location}.
@@ -72,12 +72,12 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="col-span-2 lg:col-span-3">
+          <div className="col-span-2 lg:col-span-4">
             <h4 className={headingClass}>Contact</h4>
             <ul className="space-y-3 text-[15px] text-cream-200/65">
               <li className="flex items-start gap-2.5">
                 <Mail size={15} className="mt-1 shrink-0 text-gold-400" />
-                <a href={`mailto:${brand.email}`} className="break-all hover:text-gold-400 transition-colors">
+                <a href={`mailto:${brand.email}`} className="[overflow-wrap:anywhere] hover:text-gold-400 transition-colors">
                   {brand.email}
                 </a>
               </li>

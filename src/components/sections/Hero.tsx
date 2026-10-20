@@ -52,15 +52,15 @@ export default function Hero() {
               <Sparkles size={14} className="text-gold-400" />
               <span className="text-cream-100 text-[11px] sm:text-xs font-medium tracking-[0.25em] uppercase">{hero.eyebrow}</span>
             </div>
-            <h1 className="font-serif font-light text-cream-50 text-[3.25rem] leading-[1.02] sm:text-7xl lg:text-8xl text-balance">
+            <h1 className="font-serif font-light text-cream-50 text-[2.9rem] leading-[1.06] sm:text-6xl lg:text-[5.25rem] tracking-[-0.02em] text-balance">
               <span className="sr-only">{brand.name} — </span>
               {hero.titleLine1}
               <br />
-              <span className="gradient-gold font-medium italic">{hero.titleLine2}</span>
+              <span className="gradient-gold font-normal italic">{hero.titleLine2}</span>
             </h1>
           </Reveal>
           <Reveal delay={120} className="mt-8 max-w-2xl mx-auto">
-            <p className="text-cream-200/85 text-lg md:text-xl font-light leading-relaxed">{hero.text}</p>
+            <p className="text-cream-200/85 text-base sm:text-lg leading-relaxed">{hero.text}</p>
           </Reveal>
           <Reveal delay={220} className="mt-11 flex justify-center">
             <Button variant="light" onClick={() => scrollToSection('collections')}>
