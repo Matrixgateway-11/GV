@@ -34,7 +34,7 @@ src/
   data/collections.ts the two "Explore the Collections" collections and their category photo lists
   data/stock.ts       PLACEHOLDER Pexels photos for the Doors / Flooring galleries — replace with real product photos
   assets/brand/       logo mark (house + chair) in dark and light versions
-  assets/gallery/     furniture photo library: indoor-NN / outdoor-NN / chairs-NN / dining-NN .webp (+ -thumb.webp)
+  assets/gallery/     furniture photo library: indoor-NN / outdoor-NN / chairs-NN / dining-NN / rugs-NN .webp (+ -thumb.webp)
   App.tsx             page composition
   components/
     layout/           Navbar, Footer, BrandLogo, ScrollProgress

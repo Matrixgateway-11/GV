@@ -29,6 +29,8 @@ const outdoor = (...numbers: number[]) => numbers.map((n) => photo('outdoor', n)
 /** From the Drive "Chairs" and "Dining set" folders (checked: none repeat the indoor/outdoor photos). */
 const chairs = (...numbers: number[]) => numbers.map((n) => photo('chairs', n));
 const dining = (...numbers: number[]) => numbers.map((n) => photo('dining', n));
+/** From the Drive "Rugs" folder (checked: none repeat any other library photo). */
+const rugs = (...numbers: number[]) => numbers.map((n) => photo('rugs', n));
 
 export const collections: Collection[] = [
   {
@@ -37,7 +39,13 @@ export const collections: Collection[] = [
     description:
       'Handcrafted indoor and outdoor furniture and home crafts — rattan, teak, synthetic wicker, and combination materials.',
     cover: { src: furnitureCover, alt: 'Hand-woven rattan armchair with woven wall baskets' },
-    all: [...indoor(...range(1, 22)), ...outdoor(...range(1, 32)), ...chairs(...range(1, 7)), ...dining(...range(1, 5))],
+    all: [
+      ...indoor(...range(1, 22)),
+      ...outdoor(...range(1, 32)),
+      ...chairs(...range(1, 7)),
+      ...dining(...range(1, 5)),
+      ...rugs(...range(1, 8)),
+    ],
     categories: [
       {
         id: 'chairs',
@@ -51,7 +59,7 @@ export const collections: Collection[] = [
       },
       { id: 'tables', label: 'Tables', images: indoor(2, 5, 8, 9, 12, 13, 15) },
       { id: 'lampshade', label: 'Lampshade', images: [] },
-      { id: 'rugs-carpets', label: 'Rugs & Carpets', images: [] },
+      { id: 'rugs-carpets', label: 'Rugs & Carpets', images: rugs(...range(1, 8)) },
     ],
   },
   {
