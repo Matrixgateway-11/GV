@@ -14,7 +14,7 @@ npm run preview    # serve the production build
 
 ## Page
 
-Hero → What We Do → Furnitures (+ photos) → Doors (+ photos) → Wood Flooring (+ photos) →
+Hero → What We Do → Furnitures (+ photos) → Doors (+ photos) → Flooring (+ photos) →
 Why Partner With Us → Who We Are + Our Commitment → Get in Touch → footer
 
 ## Structure
@@ -23,13 +23,13 @@ Why Partner With Us → Who We Are + Our Commitment → Get in Touch → footer
 src/
   data/site.ts        ALL site copy: brand + contact details, hero, product lines + materials, reasons, commitment  <- edit text here
   data/gallery.ts     which photos each product section shows (furniture photos picked from the library)
-  data/stock.ts       PLACEHOLDER Pexels photos for the Doors / Wood Flooring galleries — replace with real product photos
+  data/stock.ts       PLACEHOLDER Pexels photos for the Doors / Flooring galleries — replace with real product photos
   assets/brand/       logo mark (house + chair) in dark and light versions
   assets/gallery/     furniture photo library: indoor-NN.webp / outdoor-NN.webp (+ -thumb.webp)
   App.tsx             page composition
   components/
     layout/           Navbar, Footer, BrandLogo, ScrollProgress
-    sections/         Hero, Intro, ProductSection (Furnitures / Doors / Wood Flooring), WhyPartner, About, ContactCta
+    sections/         Hero, Intro, ProductSection (Furnitures / Doors / Flooring), WhyPartner, About, ContactCta
     gallery/          Gallery (3 per row, 2 on phones, click to enlarge) + Lightbox
     ui/               reusable building blocks: Button, Chips, Container, Reveal, SectionIntro (+ Label,
                       SectionTitle), ImageCollage, PinterestIcon
@@ -46,6 +46,6 @@ public/               favicon.png, apple-touch-icon.png
 
 ## Replacing the placeholder door / flooring photos
 
-`src/data/stock.ts` holds the Doors and Wood Flooring galleries (3 photos each). Add the real photos
+`src/data/stock.ts` holds the Doors and Flooring galleries (3 photos each). Add the real photos
 to `src/assets/gallery/`, list them there (or in `src/data/gallery.ts`) instead of the Pexels links, and
 the sections update automatically. Odd-sized galleries show the first photo full-width on phones.

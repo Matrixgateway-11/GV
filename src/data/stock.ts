@@ -1,7 +1,7 @@
 import type { GalleryImage } from './gallery';
 
 /**
- * PLACEHOLDER stock photos for the Doors and Wood Flooring galleries.
+ * PLACEHOLDER stock photos for the Doors and Flooring galleries.
  *
  * These are free-licence photos from Pexels (https://www.pexels.com/license/), used only until
  * Golden Village's own door and flooring product photos are available. Replace them with real

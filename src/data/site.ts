@@ -50,7 +50,7 @@ export const hero = {
 };
 
 /** Scrolling strip under the hero. */
-export const marqueeItems = ['Furnitures', 'Doors', 'Wood Flooring', 'SVLK Certified', 'OEM & ODM', 'Worldwide Shipping', 'From Indonesia to the World'];
+export const marqueeItems = ['Furnitures', 'Doors', 'Flooring', 'SVLK Certified', 'OEM & ODM', 'Worldwide Shipping', 'From Indonesia to the World'];
 
 export const intro = {
   /** Shown as the large statement under "What We Do"; the brand name is highlighted. */
@@ -91,7 +91,7 @@ export const productLines: ProductLine[] = [
   },
   {
     id: 'flooring',
-    title: 'Wood Flooring',
+    title: 'Flooring',
     label: 'Teak & Exotic Woods',
     description:
       'Premium solid and engineered wood flooring — teak and exotic woods. Sustainable, durable, and crafted for luxury living.',
