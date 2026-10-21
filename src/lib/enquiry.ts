@@ -1,4 +1,5 @@
 import { brand } from '../data/site';
+import { formatPhone, phoneError } from './phone';
 
 /**
  * "Request Catalog" enquiry: form model, validation, message formatting and submission.
@@ -14,6 +15,9 @@ export type Interest = (typeof interestOptions)[number];
 export type EnquiryForm = {
   name: string;
   email: string;
+  /** ISO code of the country whose dialling code the number uses. */
+  phoneCountry: string;
+  /** The number without the dialling code, as typed. */
   phone: string;
   company: string;
   country: string;
@@ -32,6 +36,7 @@ export const MESSAGE_MAX = 1000;
 export const emptyEnquiry: EnquiryForm = {
   name: '',
   email: '',
+  phoneCountry: '',
   phone: '',
   company: '',
   country: '',
@@ -48,18 +53,19 @@ export function validateEnquiry(form: EnquiryForm): EnquiryErrors {
   const errors: EnquiryErrors = {};
   if (form.name.trim().length < 2) errors.name = 'Please enter your full name.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.email.trim())) errors.email = 'Please enter a valid email address.';
-  const digits = form.phone.replace(/\D/g, '');
-  if (!/^\+?[\d\s().-]+$/.test(form.phone.trim()) || digits.length < 7 || digits.length > 15) {
-    errors.phone = 'Please enter a valid phone number, including the country code.';
-  }
+  const phone = phoneError(form.phoneCountry, form.phone);
+  if (phone) errors.phone = phone;
   if (form.message.trim().length < 10) errors.message = 'Please tell us a little about what you need (at least 10 characters).';
   if (!form.consent) errors.consent = 'Please confirm we may contact you about this enquiry.';
   return errors;
 }
 
+/** The phone number in international format, e.g. "+62 812 3456 7890". */
+export const fullPhone = (form: EnquiryForm) => formatPhone(form.phoneCountry, form.phone);
+
 /** Plain-text summary used for email, WhatsApp and "copy details". */
 export function enquiryText(form: EnquiryForm): string {
-  const lines = [`Name: ${form.name.trim()}`, `Email: ${form.email.trim()}`, `Phone: ${form.phone.trim()}`];
+  const lines = [`Name: ${form.name.trim()}`, `Email: ${form.email.trim()}`, `Phone: ${fullPhone(form)}`];
   if (form.company.trim()) lines.push(`Company: ${form.company.trim()}`);
   if (form.country.trim()) lines.push(`Country: ${form.country.trim()}`);
   if (form.interests.length) lines.push(`Interested in: ${form.interests.join(', ')}`);
@@ -90,7 +96,7 @@ export async function submitEnquiry(form: EnquiryForm): Promise<DeliveryMode> {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...payload, submittedAt: new Date().toISOString(), page: window.location.href }),
+      body: JSON.stringify({ ...payload, phone: fullPhone(form), submittedAt: new Date().toISOString(), page: window.location.href }),
     });
     if (!response.ok) throw new Error(`Enquiry could not be sent (${response.status}).`);
     return 'sent';

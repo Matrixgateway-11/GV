@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { ArrowRight, Loader2, MessageCircle } from 'lucide-react';
 import { ChoiceChips, ConsentField, TextAreaField, TextField } from './fields';
+import PhoneField from './PhoneField';
 import {
   clearDraft,
   emptyEnquiry,
@@ -17,6 +18,7 @@ import {
   type EnquiryForm as EnquiryFormData,
   type Interest,
 } from '../../lib/enquiry';
+import { findCountry, guessCountry } from '../../lib/phone';
 import { brand } from '../../data/site';
 
 type EnquiryFormProps = {
@@ -28,6 +30,7 @@ type EnquiryFormProps = {
 function initialForm(preset: Interest[]): EnquiryFormData {
   const draft = loadDraft();
   const form = { ...emptyEnquiry, ...draft, consent: false, website: '' };
+  if (!findCountry(form.phoneCountry)) form.phoneCountry = guessCountry();
   const known = (form.interests ?? []).filter((item): item is Interest => (interestOptions as readonly string[]).includes(item));
   form.interests = Array.from(new Set([...known, ...preset]));
   return form;
@@ -126,17 +129,15 @@ export default function EnquiryForm({ preset, onDelivered }: EnquiryFormProps) {
             error={errorFor('email')}
             inputRef={(el) => (refs.current.email = el)}
           />
-          <TextField
+          <PhoneField
             id="enq-phone"
             label="Phone / WhatsApp"
             required
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            placeholder="+62 812 3456 7890"
-            hint="Include your country code."
+            hint="Choose your country code, then enter your number."
+            country={form.phoneCountry}
+            onCountryChange={(iso) => update('phoneCountry', iso)}
             value={form.phone}
-            onChange={(e) => update('phone', e.target.value)}
+            onChange={(value) => update('phone', value)}
             onBlur={blur('phone')}
             error={errorFor('phone')}
             inputRef={(el) => (refs.current.phone = el)}

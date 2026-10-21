@@ -121,14 +121,14 @@ function EnquiryDialog({ preset, leaving, onClose }: EnquiryDialogProps) {
         </aside>
 
         {/* Form panel */}
-        <div ref={panelRef} className="overscroll-contain lg:col-span-7 lg:h-full lg:overflow-y-auto">
+        <div ref={panelRef} className="relative overscroll-contain lg:col-span-7 lg:h-full lg:overflow-y-auto">
           <div className="sticky top-0 z-10 hidden items-center justify-between border-b border-cream-200/80 px-10 py-4 glass lg:flex xl:px-14">
             <button
               type="button"
               onClick={onClose}
               className="inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.2em] text-bark-700 transition-colors hover:text-gold-600"
             >
-              <ArrowLeft size={16} /> Back to website
+              <ArrowLeft size={16} /> Back
             </button>
             <button
               type="button"
@@ -158,7 +158,7 @@ function EnquiryDialog({ preset, leaving, onClose }: EnquiryDialogProps) {
                   onClick={onClose}
                   className="mt-10 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.2em] text-bark-600/80 transition-colors hover:text-gold-600 lg:hidden"
                 >
-                  <ArrowLeft size={16} /> Back to website
+                  <ArrowLeft size={16} /> Back
                 </button>
               </>
             )}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ArrowLeft, Check, Copy, Mail, MessageCircle } from 'lucide-react';
-import { enquiryMailto, enquiryText, enquiryWhatsApp, type DeliveryMode, type EnquiryForm } from '../../lib/enquiry';
+import { enquiryMailto, enquiryText, enquiryWhatsApp, fullPhone, type DeliveryMode, type EnquiryForm } from '../../lib/enquiry';
 import { brand } from '../../data/site';
 
 type EnquirySuccessProps = {
@@ -35,7 +35,7 @@ export default function EnquirySuccess({ mode, form, onClose }: EnquirySuccessPr
   const summary: [string, string][] = [
     ['Name', form.name.trim()],
     ['Email', form.email.trim()],
-    ['Phone', form.phone.trim()],
+    ['Phone', fullPhone(form)],
     ...(form.company.trim() ? ([['Company', form.company.trim()]] as [string, string][]) : []),
     ...(form.country.trim() ? ([['Country', form.country.trim()]] as [string, string][]) : []),
     ...(form.interests.length ? ([['Interested in', form.interests.join(', ')]] as [string, string][]) : []),
@@ -91,7 +91,7 @@ export default function EnquirySuccess({ mode, form, onClose }: EnquirySuccessPr
           onClick={onClose}
           className="inline-flex items-center justify-center gap-3 rounded-full bg-bark-800 px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.14em] text-cream-50 transition-colors hover:bg-gold-500 hover:text-bark-900"
         >
-          <ArrowLeft size={16} /> Back to website
+          <ArrowLeft size={16} /> Back
         </button>
         <a
           href="#explore/furniture-crafts"

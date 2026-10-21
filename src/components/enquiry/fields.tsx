@@ -17,7 +17,7 @@ type FieldShellProps = {
 };
 
 /** Label, control, then either the error or the hint underneath. */
-function FieldShell({ id, label, required, hint, error, aside, children }: FieldShellProps) {
+export function FieldShell({ id, label, required, hint, error, aside, children }: FieldShellProps) {
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3">
@@ -42,7 +42,7 @@ function FieldShell({ id, label, required, hint, error, aside, children }: Field
   );
 }
 
-const describedBy = (id: string, error?: string | false, hint?: ReactNode) => (error ? `${id}-error` : hint ? `${id}-hint` : undefined);
+export const describedBy = (id: string, error?: string | false, hint?: ReactNode) => (error ? `${id}-error` : hint ? `${id}-hint` : undefined);
 
 type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'id'> & {
   id: string;
@@ -122,7 +122,7 @@ export function ChoiceChips<T extends string>({ legend, options, value, onToggle
           return (
             <label
               key={option}
-              className={`inline-flex cursor-pointer select-none items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-medium transition-colors duration-200 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gold-400 has-[:focus-visible]:ring-offset-2 ${
+              className={`relative inline-flex cursor-pointer select-none items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-medium transition-colors duration-200 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gold-400 has-[:focus-visible]:ring-offset-2 ${
                 checked ? 'border-bark-800 bg-bark-800 text-cream-50' : 'border-cream-300 bg-white text-bark-700 hover:border-gold-400'
               }`}
             >
@@ -155,7 +155,7 @@ type ConsentFieldProps = {
 export function ConsentField({ id, checked, onChange, error, inputRef, children }: ConsentFieldProps) {
   return (
     <div>
-      <label htmlFor={id} className="group flex cursor-pointer items-start gap-3">
+      <label htmlFor={id} className="group relative flex cursor-pointer items-start gap-3">
         <input
           id={id}
           ref={inputRef}

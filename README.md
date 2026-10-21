@@ -32,6 +32,9 @@ Every "Request Catalog" button opens a full-screen enquiry page at `/#request-ca
 It asks for name, email, phone/WhatsApp, company, country, interests and a message, validates as the
 visitor goes, keeps an unsent draft for the browser tab, and has a hidden spam trap.
 
+The phone field has a searchable country-code picker (all 245 countries with flags). It pre-selects the
+visitor's country from their time zone, and a full number typed as "+44 …" switches the code to match.
+
 Delivery (`src/lib/enquiry.ts`):
 
 - **With a backend** — set `VITE_ENQUIRY_ENDPOINT` (e.g. in Vercel → Settings → Environment Variables)
@@ -46,6 +49,8 @@ src/
   data/site.ts        ALL site copy: brand + contact details, hero, product lines + materials, reasons, commitment  <- edit text here
   data/gallery.ts     photo library helper + the one feature photo (and "View the collection" link) per product section
   data/collections.ts the two "Explore the Collections" collections and their category photo lists
+  data/countries.ts   countries + dialling codes for the phone picker (flags: public/flags/<iso>.svg)
+  data/timezones.ts   time zone -> country, to pre-select the visitor's dialling code
   data/stock.ts       PLACEHOLDER Pexels photos for the Doors / Flooring galleries — replace with real product photos
   assets/brand/       logo mark (house + chair) in dark and light versions
   assets/gallery/     furniture photo library: indoor-NN / outdoor-NN / chairs-NN / dining-NN / rugs-NN .webp (+ -thumb.webp)
@@ -54,16 +59,17 @@ src/
     layout/           Navbar, Footer, BrandLogo, ScrollProgress
     sections/         Hero, Intro, ExploreCollections, ProductSection (Furnitures / Doors / Flooring), WhyPartner, About, ContactCta
     collections/      CollectionViewer (full-screen collection view with category tabs)
-    enquiry/          EnquiryPage (full-screen Request Catalog page), EnquiryForm, EnquirySuccess, form fields
+    enquiry/          EnquiryPage (full-screen Request Catalog page), EnquiryForm, EnquirySuccess, PhoneField, form fields
     gallery/          Gallery (3 per row, 2 on phones, click to enlarge) + Lightbox
     ui/               reusable building blocks: Button, Chips, Container, Reveal, SectionIntro (+ Label,
                       SectionTitle), ImageCollage, PinterestIcon
   hooks/              useReveal (scroll-reveal), useScrollProgress, useHashRoute (URL-linked full-screen pages),
                       useCollectionRoute (collection views)
   lib/enquiry.ts      enquiry form fields, validation, and sending (endpoint / email app / WhatsApp)
+  lib/phone.ts        phone helpers: default country, "+code" detection, validation, formatting
   index.css           reveal / zoom / glass / gold-gradient styles
 tailwind.config.js    cream / bark / gold / sage palette, fonts, keyframes (incl. marquee)
-public/               favicon.png, apple-touch-icon.png
+public/               favicon.png, apple-touch-icon.png, flags/ (country flags, from country-flag-icons, MIT)
 ```
 
 ## Fonts
