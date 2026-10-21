@@ -4,9 +4,9 @@ import { formatPhone, phoneError } from './phone';
 /**
  * "Request Catalog" enquiry: form model, validation, message formatting and submission.
  *
- * Submission: when VITE_ENQUIRY_ENDPOINT is set (the future backend), the enquiry is POSTed there as JSON.
- * Until then it falls back to opening the visitor's email app with the enquiry pre-written to the company
- * address, so no enquiry is ever silently lost.
+ * Submission: the enquiry is POSTed to the site's own server function (api/enquiry.ts), which saves it for
+ * the admin panel and emails the team. While that isn't set up yet (it answers 503, or 404 in local
+ * development), the visitor's email app opens with the enquiry pre-written instead, so none is ever lost.
  */
 
 export const interestOptions = ['Furniture & Crafts', 'Doors', 'Flooring', 'Custom / OEM & ODM'] as const;
@@ -87,22 +87,22 @@ export const enquiryWhatsApp = (form: EnquiryForm) =>
 /** How the enquiry left the site: delivered by the backend, or handed to the visitor's email app / WhatsApp. */
 export type DeliveryMode = 'sent' | 'email-app' | 'whatsapp';
 
-const endpoint = import.meta.env.VITE_ENQUIRY_ENDPOINT as string | undefined;
+const ENDPOINT = '/api/enquiry';
 
 export async function submitEnquiry(form: EnquiryForm): Promise<DeliveryMode> {
   if (form.website) return 'sent'; // honeypot filled: quietly pretend it worked
-  if (endpoint) {
-    const { website: _honeypot, ...payload } = form;
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...payload, phone: fullPhone(form), submittedAt: new Date().toISOString(), page: window.location.href }),
-    });
-    if (!response.ok) throw new Error(`Enquiry could not be sent (${response.status}).`);
-    return 'sent';
+  const { website: _honeypot, ...payload } = form;
+  const response = await fetch(ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...payload, phone: fullPhone(form), page: window.location.href }),
+  });
+  if (response.status === 503 || response.status === 404) {
+    window.location.href = enquiryMailto(form);
+    return 'email-app';
   }
-  window.location.href = enquiryMailto(form);
-  return 'email-app';
+  if (!response.ok) throw new Error(`Enquiry could not be sent (${response.status}).`);
+  return 'sent';
 }
 
 // Draft kept for the browser session, so closing the page doesn't lose what was typed.

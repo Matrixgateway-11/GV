@@ -35,12 +35,33 @@ visitor goes, keeps an unsent draft for the browser tab, and has a hidden spam t
 The phone field has a searchable country-code picker (all 245 countries with flags). It pre-selects the
 visitor's country from their time zone, and a full number typed as "+44 …" switches the code to match.
 
-Delivery (`src/lib/enquiry.ts`):
+Delivery (`src/lib/enquiry.ts` → `api/enquiry.ts`):
 
-- **With a backend** — set `VITE_ENQUIRY_ENDPOINT` (e.g. in Vercel → Settings → Environment Variables)
-  to a URL that accepts a JSON `POST`; the form sends the enquiry there and shows "Thank you".
-- **Until then** — "Send Enquiry" opens the visitor's email app with the full enquiry addressed to
-  `brand.email`, and "Send on WhatsApp instead" opens a WhatsApp chat with it, so no enquiry is lost.
+- **Once the backend is set up** (see `admin/README.md`) — the form posts to the site's own server function
+  `/api/enquiry`, which saves the enquiry for the admin panel (Supabase) and emails it to the team (Resend).
+- **Until then** — the function answers "not configured", and "Send Enquiry" opens the visitor's email app
+  with the full enquiry addressed to `brand.email` instead. "Send on WhatsApp instead" always works.
+  No enquiry is lost either way.
+
+## Admin panel and visit counting
+
+- `admin/` — separate React app (its own Vercel project, Root Directory `admin`) with sign-in, a
+  daily / weekly / monthly dashboard and the enquiry inbox. Runs in demo mode until connected.
+  **Setup steps: `admin/README.md`.**
+- `api/track.ts` + `src/lib/analytics.ts` — anonymous visit counting on the live site (no cookies,
+  no IP addresses stored; visitors are told apart by a hash that changes daily).
+- `api/enquiry.ts` — stores and emails enquiries; validates on the server, spam trap, max 5 per hour per sender.
+- `supabase/schema.sql` — the database tables, access rules and dashboard queries (run once in Supabase).
+
+Website environment variables (Vercel → the website project → Settings → Environment Variables):
+
+| Variable | What it is |
+|---|---|
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase **secret** key (server only — never in `VITE_` variables) |
+| `RESEND_API_KEY` | Resend API key, for the new-enquiry emails |
+| `ENQUIRY_TO` | Who gets the enquiry emails, comma-separated (the official addresses) |
+| `ENQUIRY_FROM` | Optional sender once a domain is verified in Resend, e.g. `Golden Village <website@yourdomain.com>` |
 
 ## Structure
 
@@ -65,11 +86,15 @@ src/
                       SectionTitle), ImageCollage, PinterestIcon
   hooks/              useReveal (scroll-reveal), useScrollProgress, useHashRoute (URL-linked full-screen pages),
                       useCollectionRoute (collection views)
-  lib/enquiry.ts      enquiry form fields, validation, and sending (endpoint / email app / WhatsApp)
+  lib/enquiry.ts      enquiry form fields, validation, and sending (server / email app / WhatsApp)
+  lib/analytics.ts    anonymous visit counting (live site only)
   lib/phone.ts        phone helpers: default country, "+code" detection, validation, formatting
   index.css           reveal / zoom / glass / gold-gradient styles
 tailwind.config.js    cream / bark / gold / sage palette, fonts, keyframes (incl. marquee)
 public/               favicon.png, apple-touch-icon.png, flags/ (country flags, from country-flag-icons, MIT)
+api/                  Vercel server functions: enquiry.ts, track.ts (+ _lib/ helpers)
+supabase/schema.sql   database setup for enquiries, visits and the admin panel
+admin/                the admin panel (separate app — see admin/README.md)
 ```
 
 ## Fonts
