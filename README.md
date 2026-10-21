@@ -25,6 +25,20 @@ Doors, Flooring), photo counts and the click-to-enlarge viewer. Categories witho
 "coming soon" panel. Each view has its own link, e.g. `/#explore/furniture-crafts/chairs`, and the
 browser Back button closes it. Edit which photos go in which category in `src/data/collections.ts`.
 
+## Request Catalog form
+
+Every "Request Catalog" button opens a full-screen enquiry page at `/#request-catalog`
+(`/#request-catalog/doors`, `/furniture-crafts`, `/flooring` or `/doors-flooring` pre-tick that interest).
+It asks for name, email, phone/WhatsApp, company, country, interests and a message, validates as the
+visitor goes, keeps an unsent draft for the browser tab, and has a hidden spam trap.
+
+Delivery (`src/lib/enquiry.ts`):
+
+- **With a backend** — set `VITE_ENQUIRY_ENDPOINT` (e.g. in Vercel → Settings → Environment Variables)
+  to a URL that accepts a JSON `POST`; the form sends the enquiry there and shows "Thank you".
+- **Until then** — "Send Enquiry" opens the visitor's email app with the full enquiry addressed to
+  `brand.email`, and "Send on WhatsApp instead" opens a WhatsApp chat with it, so no enquiry is lost.
+
 ## Structure
 
 ```
@@ -40,10 +54,13 @@ src/
     layout/           Navbar, Footer, BrandLogo, ScrollProgress
     sections/         Hero, Intro, ExploreCollections, ProductSection (Furnitures / Doors / Flooring), WhyPartner, About, ContactCta
     collections/      CollectionViewer (full-screen collection view with category tabs)
+    enquiry/          EnquiryPage (full-screen Request Catalog page), EnquiryForm, EnquirySuccess, form fields
     gallery/          Gallery (3 per row, 2 on phones, click to enlarge) + Lightbox
     ui/               reusable building blocks: Button, Chips, Container, Reveal, SectionIntro (+ Label,
                       SectionTitle), ImageCollage, PinterestIcon
-  hooks/              useReveal (scroll-reveal), useScrollProgress, useCollectionRoute (URL-linked collection views)
+  hooks/              useReveal (scroll-reveal), useScrollProgress, useHashRoute (URL-linked full-screen pages),
+                      useCollectionRoute (collection views)
+  lib/enquiry.ts      enquiry form fields, validation, and sending (endpoint / email app / WhatsApp)
   index.css           reveal / zoom / glass / gold-gradient styles
 tailwind.config.js    cream / bark / gold / sage palette, fonts, keyframes (incl. marquee)
 public/               favicon.png, apple-touch-icon.png

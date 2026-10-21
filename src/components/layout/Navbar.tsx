@@ -79,8 +79,8 @@ export default function Navbar() {
             })}
           </nav>
 
-          <button
-            onClick={() => go('#contact')}
+          <a
+            href="#request-catalog"
             className={`hidden lg:inline-flex items-center px-5 xl:px-6 py-3 rounded-full text-[12px] font-medium uppercase tracking-[0.12em] xl:tracking-[0.18em] border transition-all duration-300 ${
               solid
                 ? 'border-gold-500/70 text-bark-800 hover:bg-gold-400 hover:border-gold-400'
@@ -88,7 +88,7 @@ export default function Navbar() {
             }`}
           >
             Request Catalog
-          </button>
+          </a>
 
           <button
             onClick={() => setMenuOpen((open) => !open)}
@@ -114,12 +114,13 @@ export default function Navbar() {
               {link.label}
             </button>
           ))}
-          <button
-            onClick={() => go('#contact')}
-            className="mt-5 py-3.5 rounded-full bg-gold-400 text-bark-900 text-[13px] font-medium uppercase tracking-[0.18em] hover:bg-gold-500 transition-colors"
+          <a
+            href="#request-catalog"
+            onClick={() => setMenuOpen(false)}
+            className="mt-5 py-3.5 rounded-full bg-gold-400 text-bark-900 text-center text-[13px] font-medium uppercase tracking-[0.18em] hover:bg-gold-500 transition-colors"
           >
             Request Catalog
-          </button>
+          </a>
         </nav>
       </div>
     </header>

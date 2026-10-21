@@ -5,7 +5,6 @@ import Button from '../ui/Button';
 import Container from '../ui/Container';
 import { Label } from '../ui/SectionIntro';
 import type { Collection } from '../../data/collections';
-import { mailto } from '../../data/site';
 
 type CollectionViewerProps = {
   collection: Collection;
@@ -17,7 +16,7 @@ type CollectionViewerProps = {
   onClose: () => void;
 };
 
-function EmptyCategory({ label }: { label: string }) {
+function EmptyCategory({ label, collectionId }: { label: string; collectionId: string }) {
   return (
     <div className="mx-auto max-w-xl rounded-3xl border border-dashed border-cream-300 bg-white/60 px-6 py-12 sm:px-10 sm:py-14 text-center">
       <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gold-400/15 text-gold-600">
@@ -27,7 +26,7 @@ function EmptyCategory({ label }: { label: string }) {
       <p className="mt-3 text-[15px] leading-relaxed text-bark-600/80">
         Photos for this category will be added soon. Contact us for the current catalog and factory price list.
       </p>
-      <Button variant="dark" href={mailto(`${label} catalog request`)} className="mt-8">
+      <Button variant="dark" href={`#request-catalog/${collectionId}`} className="mt-8">
         Request Catalog
       </Button>
     </div>
@@ -158,7 +157,7 @@ export default function CollectionViewer({ collection, category, leaving, onCate
               <Gallery key={`${collection.id}-${active.id}`} images={active.images} label={`${collection.title} — ${active.label}`} columns={4} />
             </>
           ) : (
-            <EmptyCategory label={active.label} />
+            <EmptyCategory label={active.label} collectionId={collection.id} />
           )}
         </div>
       </Container>

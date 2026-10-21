@@ -4,7 +4,7 @@ import Button from '../ui/Button';
 import Container from '../ui/Container';
 import Reveal from '../ui/Reveal';
 import { Label } from '../ui/SectionIntro';
-import { brand, contactCta, mailto, whatsappUrl } from '../../data/site';
+import { brand, contactCta, whatsappUrl } from '../../data/site';
 
 function ContactRow({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) {
   return (
@@ -34,7 +34,7 @@ export default function ContactCta() {
             </h2>
             <p className="mt-5 max-w-xl text-base sm:text-lg text-cream-200/75">{contactCta.text}</p>
             <div className="mt-9 flex flex-col sm:flex-row gap-4">
-              <Button variant="gold" href={mailto('Catalog, factory price list & samples request')} icon={<Mail size={16} />}>
+              <Button variant="gold" href="#request-catalog" icon={<Mail size={16} />}>
                 Request Catalog
               </Button>
               <Button variant="outlineLight" href={whatsappUrl} external arrow={false} icon={<MessageCircle size={16} />}>

@@ -1,3 +1,4 @@
+import EnquiryPage from './components/enquiry/EnquiryPage';
 import Footer from './components/layout/Footer';
 import Navbar from './components/layout/Navbar';
 import ScrollProgress from './components/layout/ScrollProgress';
@@ -26,6 +27,7 @@ export default function App() {
         <ContactCta />
       </main>
       <Footer />
+      <EnquiryPage />
     </div>
   );
 }
