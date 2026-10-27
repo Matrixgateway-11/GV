@@ -60,10 +60,12 @@ export default function Hero() {
             </h1>
           </Reveal>
           <Reveal delay={120} className="mt-8 max-w-3xl mx-auto">
-            {/* Shadow keeps the copy readable over the bright parts of the photo. */}
-            <p className="text-cream-50 font-semibold text-base sm:text-lg leading-relaxed text-balance [text-shadow:0_1px_14px_rgba(19,16,9,0.7)]">
+            <p className="text-cream-200/85 text-base sm:text-lg leading-relaxed text-balance">
               {hero.text}
-              <span className="mt-2 block font-bold text-gold-300 tracking-wide">{brand.slogan}</span>
+              {/* Shadow keeps the slogan readable over the bright parts of the photo. */}
+              <span className="mt-2 block font-bold text-gold-300 tracking-wide [text-shadow:0_1px_14px_rgba(19,16,9,0.7)]">
+                {brand.slogan}
+              </span>
             </p>
           </Reveal>
           <Reveal delay={220} className="mt-11 flex justify-center">
