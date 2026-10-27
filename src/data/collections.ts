@@ -53,8 +53,8 @@ export const collections: Collection[] = [
         images: [...chairs(...range(1, 7)), ...indoor(1, 6, 7, 18, 19, 20, 22), ...outdoor(...range(1, 22), 24, 26, 29, 30, 32)],
       },
       {
-        id: 'living-set',
-        label: 'Living Set',
+        id: 'set-collections',
+        label: 'Set Collections',
         images: [...dining(...range(1, 5)), ...indoor(16), ...outdoor(23, 25, 27, 28, 31)],
       },
       { id: 'tables', label: 'Tables', images: indoor(2, 5, 8, 9, 12, 13, 15) },

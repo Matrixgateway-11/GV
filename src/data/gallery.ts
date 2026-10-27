@@ -63,7 +63,7 @@ const feature = (image: GalleryImage, alt: string, caption: string, explore: Pro
 });
 
 export const productFeatures: Record<'furnitures' | 'doors' | 'flooring', ProductFeature> = {
-  // From the Living Set category
+  // From the Set Collections category
   furnitures: feature(photo('dining', 4), 'Teak dining table with hand-woven chairs on a sunny terrace', 'Teak dining set', {
     collection: 'furniture-crafts',
     category: 'all',

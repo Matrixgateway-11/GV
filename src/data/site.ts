@@ -1,9 +1,11 @@
 import type { LucideIcon } from 'lucide-react';
 import { BadgeCheck, Factory, Handshake, Leaf, PencilRuler } from 'lucide-react';
 import heroPhoto from '../assets/hero.webp';
-import whyPhoto from '../assets/gallery/dining/dining-02.webp';
-import aboutPhoto from '../assets/gallery/indoor/indoor-05.webp';
-import aboutDetailPhoto from '../assets/gallery/indoor/indoor-11.webp';
+import whyPhoto from '../assets/gallery/outdoor/outdoor-02.webp';
+import aboutPhoto from '../assets/gallery/dining/dining-03.webp';
+import aboutPhotoSmall from '../assets/gallery/dining/dining-03-thumb.webp';
+import aboutDetailPhoto from '../assets/about/coffee-table.webp';
+import aboutDetailPhotoSmall from '../assets/about/coffee-table-thumb.webp';
 import contactPhoto from '../assets/gallery/outdoor/outdoor-27.webp';
 
 /** All site copy lives here — edit text in this file rather than in the components. */
@@ -129,16 +131,29 @@ export const reasons: Reason[] = [
   },
 ];
 
-export const whyImage = { src: whyPhoto, alt: 'Teak dining table with hand-woven chairs on a sunlit terrace' };
+export const whyImage = { src: whyPhoto, alt: 'Teak armchair with a hand-woven rope seat and back on a garden deck' };
 
 export const commitment = {
   quote: 'We are not just selling products — we are building long-term partnerships.',
   text: 'From Central Java, Indonesia to your showroom anywhere in the world, we ensure quality that speaks for itself.',
 };
 
+/** Both landscape — width/height keep each photo's own shape, so nothing is cropped or padded. */
 export const aboutImages = {
-  main: { src: aboutPhoto, alt: 'Handcrafted solid wood stools and tables' },
-  detail: { src: aboutDetailPhoto, alt: 'Tall hand-woven rattan floor vases' },
+  main: {
+    src: aboutPhoto,
+    srcSet: `${aboutPhotoSmall} 640w, ${aboutPhoto} 1600w`,
+    alt: 'Teak trestle dining table with six woven-back armchairs on a stone terrace',
+    width: 1600,
+    height: 668,
+  },
+  detail: {
+    src: aboutDetailPhoto,
+    srcSet: `${aboutDetailPhotoSmall} 640w, ${aboutDetailPhoto} 1600w`,
+    alt: 'Solid teak slatted coffee table in a light living room',
+    width: 1600,
+    height: 883,
+  },
 };
 
 export const contactCta = {

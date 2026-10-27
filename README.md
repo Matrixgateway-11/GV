@@ -20,7 +20,7 @@ Flooring (+ photos) → Why Partner With Us → Who We Are + Our Commitment → 
 ## Explore the Collections
 
 Two large cards — **Furniture & Crafts** and **Doors & Flooring**. Clicking one opens a full-screen
-collection view with category tabs (All, Chairs, Living Set, Tables, Lampshade, Rugs & Carpets /
+collection view with category tabs (All, Chairs, Set Collections, Tables, Lampshade, Rugs & Carpets /
 Doors, Flooring), photo counts and the click-to-enlarge viewer. Categories without photos show a
 "coming soon" panel. Each view has its own link, e.g. `/#explore/furniture-crafts/chairs`, and the
 browser Back button closes it. Edit which photos go in which category in `src/data/collections.ts`.

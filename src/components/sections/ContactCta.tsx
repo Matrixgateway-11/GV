@@ -45,7 +45,7 @@ export default function ContactCta() {
 
           <Reveal delay={150} className="lg:col-span-5 min-w-0">
             <div className="rounded-2xl border border-cream-100/15 bg-cream-50/[0.06] backdrop-blur-md px-6 py-3 sm:px-8 sm:py-4">
-              <ContactRow icon={<Mail size={18} />} label="Email">
+              <ContactRow icon={<Mail size={18} />} label="Business Email">
                 {brand.emails.map((email) => (
                   <a key={email} href={`mailto:${email}`} className={`block ${linkClass}`}>
                     {email}

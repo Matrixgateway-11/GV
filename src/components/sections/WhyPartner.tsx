@@ -20,8 +20,15 @@ export default function WhyPartner() {
                 </SectionTitle>
               </Reveal>
               <Reveal delay={120} className="mt-8">
-                <div className="zoom-wrap relative overflow-hidden rounded-2xl aspect-[16/11] lg:aspect-[4/5]">
-                  <img src={whyImage.src} alt={whyImage.alt} loading="lazy" decoding="async" className="zoom-img absolute inset-0 w-full h-full object-cover" />
+                {/* Tall photo: kept portrait at every size, anchored low so the chair is never cut off. */}
+                <div className="zoom-wrap relative overflow-hidden rounded-2xl aspect-[4/5] max-w-md lg:max-w-none">
+                  <img
+                    src={whyImage.src}
+                    alt={whyImage.alt}
+                    loading="lazy"
+                    decoding="async"
+                    className="zoom-img absolute inset-0 w-full h-full object-cover object-[center_72%]"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-bark-900/50 to-transparent" />
                 </div>
               </Reveal>
