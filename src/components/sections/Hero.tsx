@@ -59,8 +59,12 @@ export default function Hero() {
               <span className="gradient-gold font-normal italic">{hero.titleLine2}</span>
             </h1>
           </Reveal>
-          <Reveal delay={120} className="mt-8 max-w-2xl mx-auto">
-            <p className="text-cream-200/85 text-base sm:text-lg leading-relaxed">{hero.text}</p>
+          <Reveal delay={120} className="mt-8 max-w-3xl mx-auto">
+            {/* Shadow keeps the copy readable over the bright parts of the photo. */}
+            <p className="text-cream-50 font-semibold text-base sm:text-lg leading-relaxed text-balance [text-shadow:0_1px_14px_rgba(19,16,9,0.7)]">
+              {hero.text}
+              <span className="mt-2 block font-bold text-gold-300 tracking-wide">{brand.slogan}</span>
+            </p>
           </Reveal>
           <Reveal delay={220} className="mt-11 flex justify-center">
             <Button variant="light" onClick={() => scrollToSection('collections')}>

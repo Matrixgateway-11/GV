@@ -48,7 +48,8 @@ export const hero = {
   eyebrow: 'Handcrafted Furniture House',
   titleLine1: 'Every Room',
   titleLine2: 'Deserves a Story',
-  text: 'Thoughtfully made pieces for the rooms you live in and the gardens you escape to — From Indonesia to the World.',
+  /** The non-breaking space keeps "to" on the same line as "escape"; the slogan follows on its own line. */
+  text: 'Thoughtfully made pieces for the rooms you live in and the gardens you escape to',
 };
 
 /** Scrolling strip under the hero. */
