@@ -138,12 +138,13 @@ export const commitment = {
   text: 'From Central Java, Indonesia to your showroom anywhere in the world, we ensure quality that speaks for itself.',
 };
 
-/** Both landscape — width/height keep each photo's own shape, so nothing is cropped or padded. */
+/** "Who We Are" photos, both landscape — width/height keep each photo's own shape, so nothing is cropped or padded. */
 export const aboutImages = {
   main: {
     src: aboutPhoto,
     srcSet: `${aboutPhotoSmall} 640w, ${aboutPhoto} 1600w`,
     alt: 'Teak trestle dining table with six woven-back armchairs on a stone terrace',
+    caption: 'Teak dining set',
     width: 1600,
     height: 668,
   },
@@ -151,6 +152,7 @@ export const aboutImages = {
     src: aboutDetailPhoto,
     srcSet: `${aboutDetailPhotoSmall} 640w, ${aboutDetailPhoto} 1600w`,
     alt: 'Solid teak slatted coffee table in a light living room',
+    caption: 'Teak coffee table',
     width: 1600,
     height: 883,
   },

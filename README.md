@@ -83,7 +83,7 @@ src/
     enquiry/          EnquiryPage (full-screen Request Catalog page), EnquiryForm, EnquirySuccess, PhoneField, form fields
     gallery/          Gallery (3 per row, 2 on phones, click to enlarge) + Lightbox
     ui/               reusable building blocks: Button, Chips, Container, Reveal, SectionIntro (+ Label,
-                      SectionTitle), ImageCollage, PinterestIcon
+                      SectionTitle), PinterestIcon
   hooks/              useReveal (scroll-reveal), useScrollProgress, useHashRoute (URL-linked full-screen pages),
                       useCollectionRoute (collection views)
   lib/enquiry.ts      enquiry form fields, validation, and sending (server / email app / WhatsApp)
