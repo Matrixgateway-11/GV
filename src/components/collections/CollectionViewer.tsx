@@ -37,6 +37,7 @@ function EmptyCategory({ label, collectionId }: { label: string; collectionId: s
 export default function CollectionViewer({ collection, category, leaving, onCategory, onClose }: CollectionViewerProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
+  const tablistRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
   const tabs = [{ id: 'all', label: 'All', images: collection.all }, ...collection.categories];
@@ -67,6 +68,17 @@ export default function CollectionViewer({ collection, category, leaving, onCate
     const scroller = scrollRef.current;
     const bar = tabsRef.current;
     if (scroller && bar && scroller.scrollTop > bar.offsetTop) scroller.scrollTo({ top: bar.offsetTop, behavior: 'smooth' });
+  }, [active.id]);
+
+  // On narrow screens the tabs scroll sideways: keep the active one in view (e.g. when opened from a link).
+  useEffect(() => {
+    const list = tablistRef.current;
+    const tab = list?.querySelector<HTMLElement>('[aria-selected="true"]');
+    if (!list || !tab || list.scrollWidth <= list.clientWidth) return;
+    const listBox = list.getBoundingClientRect();
+    const tabBox = tab.getBoundingClientRect();
+    const left = list.scrollLeft + tabBox.left - listBox.left - (listBox.width - tabBox.width) / 2;
+    list.scrollTo({ left, behavior: 'smooth' });
   }, [active.id]);
 
   return (
@@ -120,7 +132,7 @@ export default function CollectionViewer({ collection, category, leaving, onCate
 
       <div ref={tabsRef} className="sticky top-0 z-10 glass border-b border-cream-200/80">
         <Container>
-          <div role="tablist" aria-label={`${collection.title} categories`} className="no-scrollbar -mx-6 px-6 lg:mx-0 lg:px-0 flex gap-2 overflow-x-auto py-3.5">
+          <div ref={tablistRef} role="tablist" aria-label={`${collection.title} categories`} className="no-scrollbar -mx-6 px-6 lg:mx-0 lg:px-0 flex gap-2 overflow-x-auto py-3.5">
             {tabs.map((tab) => {
               const selected = tab.id === active.id;
               return (

@@ -15,11 +15,22 @@ export type GalleryImage = {
   wide: boolean;
 };
 
-type Folder = 'indoor' | 'outdoor' | 'chairs' | 'dining' | 'rugs';
+type Folder = 'indoor' | 'outdoor' | 'chairs' | 'dining' | 'rugs' | 'stools' | 'baskets' | 'mirrors' | 'crafts';
 
 const files = import.meta.glob<string>('../assets/gallery/*/*.webp', { eager: true, import: 'default' });
 
-const labels: Record<Folder, string> = { indoor: 'Indoor', outdoor: 'Outdoor', chairs: 'Seating', dining: 'Dining', rugs: 'Rug' };
+/** Start of each photo's alt text. */
+const labels: Record<Folder, string> = {
+  indoor: 'Indoor furniture',
+  outdoor: 'Outdoor furniture',
+  chairs: 'Seating furniture',
+  dining: 'Dining furniture',
+  rugs: 'Handwoven rug',
+  stools: 'Stool or bench',
+  baskets: 'Woven basket',
+  mirrors: 'Decorative mirror',
+  crafts: 'Wooden craft and decoration',
+};
 
 /** Landscape photos — shown whole over a blurred copy of themselves instead of being cropped. */
 const widePhotos: Record<Folder, number[]> = {
@@ -28,6 +39,10 @@ const widePhotos: Record<Folder, number[]> = {
   chairs: [2, 6, 7],
   dining: [2, 3, 4, 5],
   rugs: [1, 2, 3, 4, 5, 6, 7, 8],
+  stools: [1, 2, 7, 10],
+  baskets: [6, 7, 9, 10],
+  mirrors: [],
+  crafts: [],
 };
 
 export function photo(folder: Folder, n: number): GalleryImage {
@@ -38,7 +53,7 @@ export function photo(folder: Folder, n: number): GalleryImage {
   return {
     src,
     thumb,
-    alt: `${labels[folder]} furniture by Golden Village Furnitures — photo ${n}`,
+    alt: `${labels[folder]} by Golden Village Furnitures — photo ${n}`,
     wide: widePhotos[folder].includes(n),
   };
 }
