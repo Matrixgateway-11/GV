@@ -1,7 +1,9 @@
 import { useMemo, useRef, useState } from 'react';
 import { ArrowDown, ArrowUp, Eye, EyeOff, ImagePlus, Images, Trash2, UploadCloud } from 'lucide-react';
 import {
+  createSection,
   deletePhoto,
+  deleteSection,
   fileUrl,
   listPhotos,
   listSections,
@@ -34,9 +36,28 @@ export default function Photos({ email }: { email: string }) {
   /** Photo awaiting a "really remove it?" answer. Asked on the card, not with window.confirm:
    *  browsers let people silence native dialogs, and then deleting looks like it does nothing. */
   const [confirming, setConfirming] = useState<string | null>(null);
+  /** Which group is having a section added to it, and the name being typed. */
+  const [adding, setAdding] = useState<string | null>(null);
+  const [newName, setNewName] = useState('');
   const fileInput = useRef<HTMLInputElement>(null);
 
-  const section = SECTIONS.find((s) => s.category === category) ?? SECTIONS[0];
+  const groupOf = (collection: string) => (collection === 'doors-flooring' ? 'Doors & Flooring' : 'Furniture & Crafts');
+
+  // The sections the website ships with, plus any an admin added.
+  const allSections = useMemo(() => {
+    const custom = (sections.data ?? [])
+      .filter((item) => item.is_custom)
+      .map((item) => ({
+        collection: item.collection,
+        category: item.category,
+        label: item.label || item.category,
+        group: groupOf(item.collection),
+        isCustom: true,
+      }));
+    return [...SECTIONS.map((item) => ({ ...item, isCustom: false })), ...custom];
+  }, [sections.data]);
+
+  const section = allSections.find((s) => s.category === category) ?? allSections[0];
   // No row for a section means its built-in photos are still shown.
   const showBuiltin = sections.data?.find((s) => s.category === category)?.show_builtin ?? true;
   const connected = Boolean(supabase);
@@ -125,7 +146,7 @@ export default function Photos({ email }: { email: string }) {
             <div key={group}>
               <p className="mb-2 text-[12px] font-semibold uppercase tracking-wide text-bark-700/55">{group}</p>
               <div className="flex flex-wrap gap-2">
-                {SECTIONS.filter((item) => item.group === group).map((item) => {
+                {allSections.filter((item) => item.group === group).map((item) => {
                   const active = item.category === category;
                   return (
                     <button
@@ -144,12 +165,88 @@ export default function Photos({ email }: { email: string }) {
                     </button>
                   );
                 })}
+
+                {adding === group ? (
+                  <form
+                    className="flex items-center gap-2"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      const name = newName;
+                      run(async () => {
+                        const id = await createSection(
+                          group === 'Doors & Flooring' ? 'doors-flooring' : 'furniture-crafts',
+                          name,
+                          email,
+                        );
+                        sections.reload();
+                        setCategory(id);
+                      }, 'Adding section…');
+                      setAdding(null);
+                      setNewName('');
+                    }}
+                  >
+                    <input
+                      autoFocus
+                      value={newName}
+                      onChange={(event) => setNewName(event.target.value)}
+                      placeholder="Section name"
+                      maxLength={40}
+                      className="w-44 rounded-full border border-bark-900/20 bg-white px-3.5 py-1.5 text-[13px] text-bark-900 focus:border-gold-400 focus:outline-none"
+                    />
+                    <Button variant="primary" type="submit" disabled={!newName.trim() || Boolean(busy)}>
+                      Add
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setAdding(null);
+                        setNewName('');
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </form>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAdding(group);
+                      setNewName('');
+                    }}
+                    disabled={Boolean(busy)}
+                    className="rounded-full border border-dashed border-bark-900/25 px-3.5 py-1.5 text-[13px] font-medium text-bark-700/80 hover:border-gold-400 hover:text-bark-900 disabled:opacity-40"
+                  >
+                    + Add section
+                  </button>
+                )}
               </div>
             </div>
           ))}
         </div>
 
         <div className="mt-5 border-t border-bark-900/10 pt-4">
+          {section.isCustom ? (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-[12.5px] leading-relaxed text-bark-700/70">
+                You added {section.label}. Removing it takes the photos in it as well.
+              </p>
+              <Button
+                variant="secondary"
+                icon={<Trash2 size={15} />}
+                disabled={Boolean(busy)}
+                onClick={() =>
+                  run(async () => {
+                    await deleteSection(section.category);
+                    sections.reload();
+                    setCategory(SECTIONS[0].category);
+                  }, 'Removing section…')
+                }
+              >
+                Remove section
+              </Button>
+            </div>
+          ) : (
+          <>
           <Toggle
             checked={showBuiltin}
             onChange={(next) =>
@@ -164,6 +261,8 @@ export default function Photos({ email }: { email: string }) {
             The website ships with its own {section.label.toLowerCase()} photos. Turn this off to show only
             the photos you upload here.
           </p>
+          </>
+          )}
         </div>
       </Card>
 
