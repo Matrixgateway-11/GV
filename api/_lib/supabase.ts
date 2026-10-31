@@ -57,6 +57,29 @@ export async function selectRows<T = unknown>(table: string, query: string): Pro
   return (await response.json()) as T[];
 }
 
+/**
+ * Inserts rows, updating the ones that are already there.
+ * Only the columns given are written, so columns left out keep what they had.
+ */
+export async function upsertRows(table: string, rows: Record<string, unknown>[], onConflict: string) {
+  if (!rows.length) return;
+  const response = await fetch(`${url}/rest/v1/${table}?on_conflict=${encodeURIComponent(onConflict)}`, {
+    method: 'POST',
+    headers: headers('resolution=merge-duplicates,return=minimal'),
+    body: JSON.stringify(rows),
+  });
+  await check(response, `upsert into ${table}`);
+}
+
+/** Removes rows matching a PostgREST filter, e.g. "category=eq.chairs". */
+export async function deleteRows(table: string, filter: string) {
+  const response = await fetch(`${url}/rest/v1/${table}?${filter}`, {
+    method: 'DELETE',
+    headers: headers('return=minimal'),
+  });
+  await check(response, `delete from ${table}`);
+}
+
 /** Public web address of a file in a public Storage bucket. */
 export const storagePublicUrl = (bucket: string, path: string) =>
   `${url}/storage/v1/object/public/${bucket}/${path.split('/').map(encodeURIComponent).join('/')}`;
