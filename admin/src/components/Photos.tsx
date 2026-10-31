@@ -4,17 +4,19 @@ import {
   deletePhoto,
   fileUrl,
   listPhotos,
+  listSections,
   nextSortOrder,
   patchPhoto,
   SECTIONS,
   sectionLabel,
+  setShowBuiltin,
   swapOrder,
   uploadPhoto,
   type GalleryPhoto,
 } from '../lib/photos';
 import { useAsync, useStoredState } from '../lib/hooks';
 import { supabase } from '../lib/supabase';
-import { Button, Card, EmptyState, ErrorNote, Spinner } from './ui';
+import { Button, Card, EmptyState, ErrorNote, Spinner, Toggle } from './ui';
 
 /**
  * "Photos" — add furniture pictures to any section of "Explore the Collections".
@@ -24,6 +26,7 @@ export default function Photos({ email }: { email: string }) {
   const [category, setCategory] = useStoredState('gv-admin-photo-section', SECTIONS[0].category);
   const photos = useAsync(() => listPhotos(), []);
   const { reload } = photos;
+  const sections = useAsync(() => listSections(), []);
 
   const [busy, setBusy] = useState<string | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
@@ -34,6 +37,8 @@ export default function Photos({ email }: { email: string }) {
   const fileInput = useRef<HTMLInputElement>(null);
 
   const section = SECTIONS.find((s) => s.category === category) ?? SECTIONS[0];
+  // No row for a section means its built-in photos are still shown.
+  const showBuiltin = sections.data?.find((s) => s.category === category)?.show_builtin ?? true;
   const connected = Boolean(supabase);
 
   const inSection = useMemo(
@@ -142,6 +147,23 @@ export default function Photos({ email }: { email: string }) {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-5 border-t border-bark-900/10 pt-4">
+          <Toggle
+            checked={showBuiltin}
+            onChange={(next) =>
+              run(async () => {
+                await setShowBuiltin(section.collection, category, next, email);
+                sections.reload();
+              }, 'Saving…')
+            }
+            label={`Show the website's own ${section.label} photos`}
+          />
+          <p className="mt-1.5 text-[12.5px] leading-relaxed text-bark-700/65">
+            The website ships with its own {section.label.toLowerCase()} photos. Turn this off to show only
+            the photos you upload here.
+          </p>
         </div>
       </Card>
 
