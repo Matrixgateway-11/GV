@@ -18,6 +18,17 @@ const BUCKET = 'gallery';
  */
 const CACHE = 'public, max-age=0, s-maxage=5';
 
+type SectionRow = {
+  category: string;
+  collection: string;
+  label: string | null;
+  sort_order: number;
+  is_custom: boolean;
+  show_builtin: boolean;
+};
+
+type CustomSection = { collection: string; category: string; label: string; sortOrder: number };
+
 type Row = {
   id: string;
   collection: string;
@@ -30,7 +41,7 @@ type Row = {
 
 /** Why the list came back empty, so the website's galleries can be checked from outside. Never includes the key. */
 const empty = (why: string) =>
-  new Response(JSON.stringify({ photos: [], hiddenBuiltin: [] }), {
+  new Response(JSON.stringify({ photos: [], hiddenBuiltin: [], customSections: [] }), {
     status: 200,
     headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Photos-Source': why },
   });
@@ -52,17 +63,27 @@ export async function GET() {
     return empty(`query-${status}`);
   }
 
-  // Sections where an admin has turned the website's own built-in photos off.
-  // If this can't be read, keeping the built-in photos is the safe answer.
+  // What an admin has changed about the sections: built-in photos switched off,
+  // and sections they added themselves. If this can't be read, the website is left as built.
   let hiddenBuiltin: string[] = [];
+  let customSections: CustomSection[] = [];
   try {
-    const sections = await selectRows<{ category: string }>(
+    const sections = await selectRows<SectionRow>(
       'gallery_sections',
-      'select=category&show_builtin=eq.false',
+      'select=category,collection,label,sort_order,is_custom,show_builtin&order=sort_order.asc,category.asc',
     );
-    hiddenBuiltin = sections.map((section) => section.category);
+    hiddenBuiltin = sections.filter((section) => section.show_builtin === false).map((section) => section.category);
+    customSections = sections
+      .filter((section) => section.is_custom)
+      .map((section) => ({
+        collection: section.collection,
+        category: section.category,
+        label: section.label || section.category,
+        sortOrder: section.sort_order,
+      }));
   } catch {
     hiddenBuiltin = [];
+    customSections = [];
   }
 
   const photos = rows.map((row) => ({
@@ -75,7 +96,7 @@ export async function GET() {
     wide: row.wide,
   }));
 
-  return new Response(JSON.stringify({ photos, hiddenBuiltin }), {
+  return new Response(JSON.stringify({ photos, hiddenBuiltin, customSections }), {
     status: 200,
     headers: { 'Content-Type': 'application/json', 'Cache-Control': CACHE, 'X-Photos-Source': 'database' },
   });
