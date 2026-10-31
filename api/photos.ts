@@ -41,10 +41,13 @@ type Row = {
 
 /** Why the list came back empty, so the website's galleries can be checked from outside. Never includes the key. */
 const empty = (why: string) =>
-  new Response(JSON.stringify({ photos: [], hiddenBuiltin: [], customSections: [] }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Photos-Source': why },
-  });
+  new Response(
+    JSON.stringify({ photos: [], hiddenBuiltin: [], customSections: [], hiddenBuiltinPhotos: [], builtinHash: '' }),
+    {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Photos-Source': why },
+    },
+  );
 
 export async function GET() {
   if (!supabaseConfigured()) return empty('not-configured');
@@ -86,6 +89,23 @@ export async function GET() {
     customSections = [];
   }
 
+  // Built-in photos an admin hid one at a time, and the build stamp of the stored catalogue.
+  // The website compares that stamp with its own to decide whether to send its catalogue again.
+  let hiddenBuiltinPhotos: string[] = [];
+  let builtinHash = '';
+  try {
+    const hiddenRows = await selectRows<{ category: string; photo_id: string }>(
+      'builtin_photos',
+      'select=category,photo_id&is_hidden=eq.true',
+    );
+    hiddenBuiltinPhotos = hiddenRows.map((row) => `${row.category}|${row.photo_id}`);
+    const meta = await selectRows<{ value: string }>('gallery_meta', 'select=value&key=eq.builtin_hash');
+    builtinHash = meta[0]?.value ?? '';
+  } catch {
+    hiddenBuiltinPhotos = [];
+    builtinHash = '';
+  }
+
   const photos = rows.map((row) => ({
     id: row.id,
     collection: row.collection,
@@ -96,7 +116,7 @@ export async function GET() {
     wide: row.wide,
   }));
 
-  return new Response(JSON.stringify({ photos, hiddenBuiltin, customSections }), {
+  return new Response(JSON.stringify({ photos, hiddenBuiltin, customSections, hiddenBuiltinPhotos, builtinHash }), {
     status: 200,
     headers: { 'Content-Type': 'application/json', 'Cache-Control': CACHE, 'X-Photos-Source': 'database' },
   });
