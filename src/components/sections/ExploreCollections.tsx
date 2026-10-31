@@ -4,7 +4,8 @@ import CollectionViewer from '../collections/CollectionViewer';
 import Container from '../ui/Container';
 import Reveal from '../ui/Reveal';
 import SectionIntro from '../ui/SectionIntro';
-import { collections, type Collection } from '../../data/collections';
+import { type Collection } from '../../data/collections';
+import { useCollections } from '../../data/managedPhotos';
 import { useCollectionRoute } from '../../hooks/useCollectionRoute';
 
 function CollectionCard({ collection, index, onOpen }: { collection: Collection; index: number; onOpen: () => void }) {
@@ -51,6 +52,8 @@ type OpenView = { collection: Collection; category: string };
 /** "Explore the Collections": two large cards that open a full-screen, URL-linked collection viewer. */
 export default function ExploreCollections() {
   const { route, open, selectCategory, close } = useCollectionRoute();
+  // Built-in photos plus anything added from the admin panel.
+  const collections = useCollections();
   const current = collections.find((collection) => collection.id === route?.collection) ?? null;
   const category = route?.category ?? 'all';
 
