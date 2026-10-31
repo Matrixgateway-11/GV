@@ -83,6 +83,13 @@ grant select on public.enquiries to authenticated;
 -- Admins may change only the status and the internal notes of an enquiry.
 grant update (status, notes) on public.enquiries to authenticated;
 
+-- The website's server functions read and write with the secret key, which acts as service_role.
+-- Without these the enquiry form and the visit counter fail with "permission denied" (SQL state
+-- 42501). PostgREST reports that as a 401, which looks exactly like a wrong key.
+grant select, insert, update, delete on public.admin_users to service_role;
+grant select, insert, update, delete on public.enquiries to service_role;
+grant select, insert, update, delete on public.page_views to service_role;
+
 -- 5. Admin logins ----------------------------------------------------------------------------
 -- Put the email you will sign in with (any email is fine for now; add the official ones later).
 -- Then create that same user in Authentication → Users → Add user.
