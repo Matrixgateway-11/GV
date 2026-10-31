@@ -304,6 +304,50 @@ export async function setShowBuiltin(collection: string, category: string, show:
   }
 }
 
+/**
+ * The photos the website itself is built with. The website publishes this list, because the
+ * file names it builds change every time; photo_id is the steady name, such as "indoor-07".
+ * Admins can hide one, but not delete it: it belongs to the website, not to the database.
+ */
+export type BuiltinPhoto = {
+  category: string;
+  photo_id: string;
+  collection: string;
+  src: string;
+  thumb: string;
+  alt: string;
+  wide: boolean;
+  position: number;
+  is_hidden: boolean;
+};
+
+export async function listBuiltin(): Promise<BuiltinPhoto[]> {
+  const client = supabase;
+  if (!client) return [];
+  const { data, error } = await client
+    .from('builtin_photos')
+    .select('category, photo_id, collection, src, thumb, alt, wide, position, is_hidden')
+    .order('category', { ascending: true })
+    .order('position', { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as BuiltinPhoto[];
+}
+
+export async function setBuiltinHidden(category: string, photoId: string, hidden: boolean): Promise<void> {
+  const client = supabase;
+  if (!client) throw new Error('Not connected to the database.');
+  const { data, error } = await client
+    .from('builtin_photos')
+    .update({ is_hidden: hidden })
+    .eq('category', category)
+    .eq('photo_id', photoId)
+    .select('photo_id');
+  if (error) throw error;
+  if (!data || data.length === 0) {
+    throw new Error('The database would not save that change. Check your email is still on the admin list.');
+  }
+}
+
 /** Next position at the end of a section. */
 export const nextSortOrder = (photos: GalleryPhoto[], category: string) =>
   photos.filter((p) => p.category === category).reduce((highest, p) => Math.max(highest, p.sort_order), 0) + 1;
