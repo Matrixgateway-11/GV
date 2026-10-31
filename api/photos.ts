@@ -10,8 +10,13 @@ import { selectRows, storagePublicUrl, supabaseConfigured } from './_lib/supabas
 
 const BUCKET = 'gallery';
 
-/** How long a browser or Vercel's CDN may reuse the list before asking again. */
-const CACHE = 'public, max-age=0, s-maxage=60, stale-while-revalidate=300';
+/**
+ * How long Vercel's CDN may reuse the list before asking again.
+ * Kept short, and with no stale-while-revalidate: hiding or removing a photo in the admin
+ * panel has to show on the website almost at once, which matters more here than saving
+ * a few requests. Five seconds still absorbs a burst of visitors.
+ */
+const CACHE = 'public, max-age=0, s-maxage=5';
 
 type Row = {
   id: string;
