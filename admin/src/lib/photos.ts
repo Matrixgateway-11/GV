@@ -206,6 +206,36 @@ export async function swapOrder(a: GalleryPhoto, b: GalleryPhoto): Promise<void>
   if (second) throw second;
 }
 
+/**
+ * Whether a section still shows the photos built into the website.
+ * A row appears only once someone has changed it; no row means they are shown.
+ */
+export type SectionSetting = { category: string; collection: string; show_builtin: boolean };
+
+export async function listSections(): Promise<SectionSetting[]> {
+  const client = supabase;
+  if (!client) return [];
+  const { data, error } = await client.from('gallery_sections').select('category, collection, show_builtin');
+  if (error) throw error;
+  return (data ?? []) as SectionSetting[];
+}
+
+export async function setShowBuiltin(collection: string, category: string, show: boolean, by: string): Promise<void> {
+  const client = supabase;
+  if (!client) throw new Error('Not connected to the database.');
+  const { data, error } = await client
+    .from('gallery_sections')
+    .upsert(
+      { category, collection, show_builtin: show, updated_at: new Date().toISOString(), updated_by: by },
+      { onConflict: 'category' },
+    )
+    .select('category');
+  if (error) throw error;
+  if (!data || data.length === 0) {
+    throw new Error('The database would not save that change. Check your email is still on the admin list, then try again.');
+  }
+}
+
 /** Next position at the end of a section. */
 export const nextSortOrder = (photos: GalleryPhoto[], category: string) =>
   photos.filter((p) => p.category === category).reduce((highest, p) => Math.max(highest, p.sort_order), 0) + 1;
