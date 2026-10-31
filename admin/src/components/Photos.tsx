@@ -28,6 +28,9 @@ export default function Photos({ email }: { email: string }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
+  /** Photo awaiting a "really remove it?" answer. Asked on the card, not with window.confirm:
+   *  browsers let people silence native dialogs, and then deleting looks like it does nothing. */
+  const [confirming, setConfirming] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
   const section = SECTIONS.find((s) => s.category === category) ?? SECTIONS[0];
@@ -217,6 +220,32 @@ export default function Photos({ email }: { email: string }) {
                   {!photo.is_published && (
                     <span className="absolute left-2 top-2 rounded-full bg-bark-900/85 px-2 py-0.5 text-[11px] font-semibold text-cream-50">Hidden</span>
                   )}
+                  {confirming === photo.id && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 bg-bark-900/92 px-3 text-center">
+                      <p className="text-[12.5px] leading-snug text-cream-100">
+                        Remove this photo from {sectionLabel(photo.category)}?
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setConfirming(null);
+                            run(() => deletePhoto(photo), 'Removing…');
+                          }}
+                          className="rounded-full bg-red-600 px-3 py-1 text-[12px] font-semibold text-white hover:bg-red-500"
+                        >
+                          Remove
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setConfirming(null)}
+                          className="rounded-full border border-cream-100/30 px-3 py-1 text-[12px] font-semibold text-cream-100 hover:border-gold-400"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center justify-between gap-1 px-2 py-2">
                   <div className="flex gap-1">
@@ -251,11 +280,7 @@ export default function Photos({ email }: { email: string }) {
                     </button>
                     <button
                       type="button"
-                      onClick={() => {
-                        if (window.confirm(`Remove this photo from ${sectionLabel(photo.category)}? This cannot be undone.`)) {
-                          run(() => deletePhoto(photo), 'Removing…');
-                        }
-                      }}
+                      onClick={() => setConfirming(photo.id)}
                       disabled={Boolean(busy)}
                       aria-label="Remove photo"
                       className="rounded-lg p-1.5 text-bark-700/70 hover:bg-red-50 hover:text-red-700 disabled:opacity-30"
