@@ -6,11 +6,13 @@ import {
   deleteSection,
   fileUrl,
   listPhotos,
+  listBuiltin,
   listSections,
   nextSortOrder,
   patchPhoto,
   SECTIONS,
   sectionLabel,
+  setBuiltinHidden,
   setShowBuiltin,
   swapOrder,
   uploadPhoto,
@@ -29,6 +31,7 @@ export default function Photos({ email }: { email: string }) {
   const photos = useAsync(() => listPhotos(), []);
   const { reload } = photos;
   const sections = useAsync(() => listSections(), []);
+  const builtin = useAsync(() => listBuiltin(), []);
 
   const [busy, setBusy] = useState<string | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
@@ -65,6 +68,11 @@ export default function Photos({ email }: { email: string }) {
   const inSection = useMemo(
     () => (photos.data ?? []).filter((photo) => photo.category === category).sort((a, b) => a.sort_order - b.sort_order),
     [photos.data, category],
+  );
+
+  const inSectionBuiltin = useMemo(
+    () => (builtin.data ?? []).filter((photo) => photo.category === category),
+    [builtin.data, category],
   );
 
   const counts = useMemo(() => {
@@ -415,6 +423,68 @@ export default function Photos({ email }: { email: string }) {
           </ul>
         )}
       </Card>
+
+      {!section.isCustom && (
+        <Card title={'The website&rsquo;s own ' + section.label + ' photos'}>
+          {builtin.loading && !builtin.data ? (
+            <div className="flex justify-center py-10">
+              <Spinner />
+            </div>
+          ) : builtin.error ? (
+            <ErrorNote message={builtin.error} onRetry={builtin.reload} />
+          ) : inSectionBuiltin.length === 0 ? (
+            <EmptyState icon={<Images size={22} />} title="Not listed yet">
+              The website sends its photo list the first time someone opens it after a new release. Open
+              the website once, then come back and reload this page.
+            </EmptyState>
+          ) : (
+            <>
+              <p className="mb-4 text-[13px] leading-relaxed text-bark-700/70">
+                These came with the website, so they can be hidden but not deleted. Hidden ones stay out of
+                the collection until you show them again.
+              </p>
+              <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                {inSectionBuiltin.map((photo) => (
+                  <li key={photo.photo_id} className="overflow-hidden rounded-xl border border-bark-900/10 bg-white">
+                    <div className="relative aspect-[3/4] bg-bark-900/5">
+                      <img
+                        src={photo.thumb}
+                        alt={photo.alt}
+                        loading="lazy"
+                        className={'h-full w-full object-cover ' + (photo.is_hidden ? 'opacity-40' : '')}
+                      />
+                      {photo.is_hidden && (
+                        <span className="absolute left-2 top-2 rounded-full bg-bark-900/85 px-2 py-0.5 text-[11px] font-semibold text-cream-50">
+                          Hidden
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between gap-2 px-2 py-2">
+                      <span className="truncate text-[11.5px] text-bark-700/55" title={photo.photo_id}>
+                        {photo.photo_id}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          run(async () => {
+                            await setBuiltinHidden(photo.category, photo.photo_id, !photo.is_hidden);
+                            builtin.reload();
+                          }, 'Saving…')
+                        }
+                        disabled={Boolean(busy)}
+                        aria-label={photo.is_hidden ? 'Show on the website' : 'Hide from the website'}
+                        className="rounded-lg p-1.5 text-bark-700/70 hover:bg-bark-900/5 hover:text-bark-900 disabled:opacity-30"
+                      >
+                        {photo.is_hidden ? <EyeOff size={15} /> : <Eye size={15} />}
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </Card>
+      )}
     </div>
   );
 }
