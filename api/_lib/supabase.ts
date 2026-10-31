@@ -48,3 +48,14 @@ export async function countRows(table: string, filter: string): Promise<number> 
   await check(response, `count of ${table}`);
   return Number(response.headers.get('content-range')?.split('/')[1] ?? 0) || 0;
 }
+
+/** Rows matching a PostgREST query, e.g. "select=id,name&is_published=eq.true&order=sort_order.asc". */
+export async function selectRows<T = unknown>(table: string, query: string): Promise<T[]> {
+  const response = await fetch(`${url}/rest/v1/${table}?${query}`, { headers: headers() });
+  await check(response, `select from ${table}`);
+  return (await response.json()) as T[];
+}
+
+/** Public web address of a file in a public Storage bucket. */
+export const storagePublicUrl = (bucket: string, path: string) =>
+  `${url}/storage/v1/object/public/${bucket}/${path.split('/').map(encodeURIComponent).join('/')}`;
