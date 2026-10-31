@@ -30,7 +30,7 @@ type Row = {
 
 /** Why the list came back empty, so the website's galleries can be checked from outside. Never includes the key. */
 const empty = (why: string) =>
-  new Response(JSON.stringify({ photos: [] }), {
+  new Response(JSON.stringify({ photos: [], hiddenBuiltin: [] }), {
     status: 200,
     headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Photos-Source': why },
   });
@@ -52,6 +52,19 @@ export async function GET() {
     return empty(`query-${status}`);
   }
 
+  // Sections where an admin has turned the website's own built-in photos off.
+  // If this can't be read, keeping the built-in photos is the safe answer.
+  let hiddenBuiltin: string[] = [];
+  try {
+    const sections = await selectRows<{ category: string }>(
+      'gallery_sections',
+      'select=category&show_builtin=eq.false',
+    );
+    hiddenBuiltin = sections.map((section) => section.category);
+  } catch {
+    hiddenBuiltin = [];
+  }
+
   const photos = rows.map((row) => ({
     id: row.id,
     collection: row.collection,
@@ -62,7 +75,7 @@ export async function GET() {
     wide: row.wide,
   }));
 
-  return new Response(JSON.stringify({ photos }), {
+  return new Response(JSON.stringify({ photos, hiddenBuiltin }), {
     status: 200,
     headers: { 'Content-Type': 'application/json', 'Cache-Control': CACHE, 'X-Photos-Source': 'database' },
   });
