@@ -76,11 +76,12 @@ export default function Photos({ email }: { email: string }) {
     setBusy(label);
     try {
       await action();
-      reload();
     } catch (error) {
       setProblem(error instanceof Error ? error.message : String(error));
     } finally {
       setBusy(null);
+      // Reload either way, so the grid shows what is really stored rather than what we hoped.
+      reload();
     }
   }
 
