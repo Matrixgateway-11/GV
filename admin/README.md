@@ -35,10 +35,12 @@ database itself, not just hidden by the app.
 1. Create a project at [supabase.com](https://supabase.com) (region: Singapore is closest to Indonesia).
 2. **SQL Editor → New query**: paste all of `supabase/schema.sql` from this repo. In step 5 of that file,
    replace `you@example.com` with the email you will sign in with (any email for now). Click **Run**.
-3. **Authentication → Sign In / Providers**: turn **off** "Allow new users to sign up".
-4. **Authentication → Users → Add user → Create new user**: the same email, a strong password,
+3. **SQL Editor → New query**: paste all of `supabase/gallery.sql` and click **Run**. This adds the
+   `gallery_photos` table and the public `gallery` storage bucket used by the **Photos** screen.
+4. **Authentication → Sign In / Providers**: turn **off** "Allow new users to sign up".
+5. **Authentication → Users → Add user → Create new user**: the same email, a strong password,
    tick **Auto Confirm User**.
-5. **Project Settings → API (API Keys)**: you will need the **Project URL**, the **publishable / anon** key
+6. **Project Settings → API (API Keys)**: you will need the **Project URL**, the **publishable / anon** key
    and the **secret / service_role** key in the next steps. Paste them straight into Vercel — don't share
    them in chat or commit them to GitHub.
 
@@ -77,6 +79,19 @@ Redeploy. From then on, enquiries are saved and visits are counted. Visits and e
    `ENQUIRY_FROM` = `Golden Village Website <website@goldenvillagefurnitureindonesia.com>`.
 4. Redeploy the website.
 
+## Photos
+
+The **Photos** screen adds furniture pictures to any section of "Explore the Collections" on the
+website. Pick a section, drop pictures in, and they appear on the site within a minute — the site is
+not rebuilt. You can also reorder them, hide one without deleting it, or remove it for good.
+
+Both sizes are made in the browser before uploading (1600px for the viewer, 640px for the grid), so a
+phone photo never reaches visitors at full size. The photos built into the website are always shown;
+anything added here appears after them.
+
+If an upload fails, nothing is left behind: the uploaded files are removed again when the database row
+cannot be saved.
+
 ## Day-to-day
 
 - **Add an admin**: Supabase SQL Editor →
@@ -85,6 +100,8 @@ Redeploy. From then on, enquiries are saved and visits are counted. Visits and e
 - **Remove an admin**: `delete from public.admin_users where email = 'name@company.com';`
   and delete the user under Authentication → Users.
 - **Change who receives enquiry emails**: edit `ENQUIRY_TO` in the website project and redeploy.
+- **Check the website is reading uploaded photos**: open `/api/photos` on the live site and look at the
+  `X-Photos-Source` header — `database` means it is, `not-configured` or `query-<status>` means it is not.
 - **Forgot password**: use "Forgot password?" on the sign-in page.
 
 ## Privacy
