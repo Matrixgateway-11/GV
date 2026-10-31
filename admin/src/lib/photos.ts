@@ -210,14 +210,82 @@ export async function swapOrder(a: GalleryPhoto, b: GalleryPhoto): Promise<void>
  * Whether a section still shows the photos built into the website.
  * A row appears only once someone has changed it; no row means they are shown.
  */
-export type SectionSetting = { category: string; collection: string; show_builtin: boolean };
+export type SectionSetting = {
+  category: string;
+  collection: string;
+  label: string | null;
+  sort_order: number;
+  is_custom: boolean;
+  show_builtin: boolean;
+};
 
 export async function listSections(): Promise<SectionSetting[]> {
   const client = supabase;
   if (!client) return [];
-  const { data, error } = await client.from('gallery_sections').select('category, collection, show_builtin');
+  const { data, error } = await client
+    .from('gallery_sections')
+    .select('category, collection, label, sort_order, is_custom, show_builtin')
+    .order('sort_order', { ascending: true })
+    .order('category', { ascending: true });
   if (error) throw error;
   return (data ?? []) as SectionSetting[];
+}
+
+/** A name turned into something that can sit in the website's address bar. */
+export const sectionId = (name: string) =>
+  name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40);
+
+export async function createSection(collection: string, name: string, by: string): Promise<string> {
+  const client = supabase;
+  if (!client) throw new Error('Not connected to the database.');
+
+  const id = sectionId(name);
+  if (!id) throw new Error('Give the section a name using letters or numbers.');
+  if (SECTIONS.some((section) => section.category === id)) {
+    throw new Error('The website already has a section with that name.');
+  }
+
+  const { data, error } = await client
+    .from('gallery_sections')
+    .insert({
+      category: id,
+      collection,
+      label: name.trim(),
+      is_custom: true,
+      // A section you added has no built-in photos to show.
+      show_builtin: false,
+      updated_by: by,
+    })
+    .select('category');
+
+  if (error) {
+    if (error.code === '23505') throw new Error('There is already a section with that name.');
+    throw error;
+  }
+  if (!data || data.length === 0) {
+    throw new Error('The database would not add that section. Check your email is still on the admin list.');
+  }
+  return id;
+}
+
+/** Removes a section an admin added. Its photos go with it. */
+export async function deleteSection(category: string): Promise<void> {
+  const client = supabase;
+  if (!client) throw new Error('Not connected to the database.');
+
+  const { error: photoError } = await client.from('gallery_photos').delete().eq('category', category);
+  if (photoError) throw photoError;
+
+  const { data, error } = await client.from('gallery_sections').delete().eq('category', category).select('category');
+  if (error) throw error;
+  if (!data || data.length === 0) {
+    throw new Error('The database would not remove that section.');
+  }
 }
 
 export async function setShowBuiltin(collection: string, category: string, show: boolean, by: string): Promise<void> {
