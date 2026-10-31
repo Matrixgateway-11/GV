@@ -5,10 +5,11 @@ import type { GalleryImage } from './gallery';
 /**
  * What the admin panel controls in "Explore the Collections".
  *
- * Two things come from /api/photos: the photos an admin uploaded, and the sections where they
- * turned the website's own built-in photos off. Uploaded photos are added after whatever is left.
+ * /api/photos answers with three things: the photos an admin uploaded, the sections where they
+ * turned the website's own built-in photos off, and any sections they added themselves.
+ * Uploaded photos are added after whatever built-in photos are left in a section.
  *
- * If the request fails, or the backend isn't set up, the built-in photos are shown as they are.
+ * If the request fails, or the backend isn't set up, the website is shown exactly as it was built.
  */
 
 type ManagedPhoto = {
@@ -21,7 +22,13 @@ type ManagedPhoto = {
   wide: boolean;
 };
 
-type PhotosResponse = { photos?: ManagedPhoto[]; hiddenBuiltin?: string[] };
+type CustomSection = { collection: string; category: string; label: string; sortOrder: number };
+
+type PhotosResponse = {
+  photos?: ManagedPhoto[];
+  hiddenBuiltin?: string[];
+  customSections?: CustomSection[];
+};
 
 const toImage = (photo: ManagedPhoto): GalleryImage => ({
   src: photo.src,
@@ -30,19 +37,21 @@ const toImage = (photo: ManagedPhoto): GalleryImage => ({
   wide: photo.wide,
 });
 
-/** Built-in collections, with uploaded photos added and switched-off built-ins taken out. */
+/** Built-in collections, with everything the admin panel changed applied on top. */
 export function mergeCollections(
   base: Collection[],
   managed: ManagedPhoto[],
   hiddenBuiltin: string[] = [],
+  customSections: CustomSection[] = [],
 ): Collection[] {
   const hidden = new Set(hiddenBuiltin);
-  if (!managed.length && hidden.size === 0) return base;
+  if (!managed.length && hidden.size === 0 && customSections.length === 0) return base;
 
   return base.map((collection) => {
     const mine = managed.filter((photo) => photo.collection === collection.id);
+    const added = customSections.filter((section) => section.collection === collection.id);
     const hidesAnything = collection.categories.some((category) => hidden.has(category.id));
-    if (!mine.length && !hidesAnything) return collection;
+    if (!mine.length && !hidesAnything && !added.length) return collection;
 
     // Built-in photos in a switched-off section go from that tab and from "All" alike.
     const droppedSources = new Set<string>();
@@ -59,8 +68,18 @@ export function mergeCollections(
       return { ...category, images: [...kept, ...extra] };
     });
 
+    // Sections the admin added come after the ones the website ships with.
+    const extraCategories = added
+      .slice()
+      .sort((a, b) => a.sortOrder - b.sortOrder || a.label.localeCompare(b.label))
+      .map((section) => ({
+        id: section.category,
+        label: section.label,
+        images: mine.filter((photo) => photo.category === section.category).map(toImage),
+      }));
+
     const all = [...collection.all.filter((image) => !droppedSources.has(image.src)), ...mine.map(toImage)];
-    return { ...collection, all, categories };
+    return { ...collection, all, categories: [...categories, ...extraCategories] };
   });
 }
 
@@ -73,6 +92,7 @@ async function fetchPhotos(signal: AbortSignal): Promise<PhotosResponse> {
 export function useCollections(): Collection[] {
   const [managed, setManaged] = useState<ManagedPhoto[]>([]);
   const [hiddenBuiltin, setHiddenBuiltin] = useState<string[]>([]);
+  const [customSections, setCustomSections] = useState<CustomSection[]>([]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -80,6 +100,7 @@ export function useCollections(): Collection[] {
       .then((body) => {
         setManaged(Array.isArray(body.photos) ? body.photos : []);
         setHiddenBuiltin(Array.isArray(body.hiddenBuiltin) ? body.hiddenBuiltin : []);
+        setCustomSections(Array.isArray(body.customSections) ? body.customSections : []);
       })
       .catch(() => {
         /* offline, or the backend isn't set up — the built-in photos are enough */
@@ -87,5 +108,8 @@ export function useCollections(): Collection[] {
     return () => controller.abort();
   }, []);
 
-  return useMemo(() => mergeCollections(builtIn, managed, hiddenBuiltin), [managed, hiddenBuiltin]);
+  return useMemo(
+    () => mergeCollections(builtIn, managed, hiddenBuiltin, customSections),
+    [managed, hiddenBuiltin, customSections],
+  );
 }
