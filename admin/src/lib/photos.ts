@@ -168,17 +168,32 @@ export async function listPhotos(): Promise<GalleryPhoto[]> {
 export async function deletePhoto(photo: GalleryPhoto): Promise<void> {
   const client = supabase;
   if (!client) throw new Error('Not connected to the database.');
-  const { error } = await client.from('gallery_photos').delete().eq('id', photo.id);
+
+  // .select() matters: without it a delete the database refuses comes back with no error
+  // and no rows, which looks exactly like success.
+  const { data, error } = await client.from('gallery_photos').delete().eq('id', photo.id).select('id');
   if (error) throw error;
-  // The row is what the website reads, so the pictures going last is safe.
-  await client.storage.from(BUCKET).remove([photo.path, photo.thumb_path]);
+  if (!data || data.length === 0) {
+    throw new Error('The database would not remove that photo. Check your email is still on the admin list, then try again.');
+  }
+
+  // The row is what the website reads, so the photo is already gone from the site.
+  // Tidying the files is best effort: a leftover file is untidy, not broken.
+  try {
+    await client.storage.from(BUCKET).remove([photo.path, photo.thumb_path]);
+  } catch {
+    /* ignore */
+  }
 }
 
 export async function patchPhoto(id: string, patch: Partial<Pick<GalleryPhoto, 'alt' | 'wide' | 'is_published' | 'sort_order' | 'category' | 'collection'>>): Promise<void> {
   const client = supabase;
   if (!client) throw new Error('Not connected to the database.');
-  const { error } = await client.from('gallery_photos').update(patch).eq('id', id);
+  const { data, error } = await client.from('gallery_photos').update(patch).eq('id', id).select('id');
   if (error) throw error;
+  if (!data || data.length === 0) {
+    throw new Error('The database would not save that change. Check your email is still on the admin list, then try again.');
+  }
 }
 
 /** Swaps a photo with its neighbour so admins can set the order photos appear in. */
