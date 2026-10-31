@@ -3,13 +3,12 @@ import { collections as builtIn, type Collection } from './collections';
 import type { GalleryImage } from './gallery';
 
 /**
- * Photos added from the admin panel.
+ * What the admin panel controls in "Explore the Collections".
  *
- * The photos built into the website (src/assets/gallery) are always shown. Anything an
- * admin uploads is fetched from /api/photos and added after them, in the section it was
- * put in — so the galleries fill out without the site being rebuilt.
+ * Two things come from /api/photos: the photos an admin uploaded, and the sections where they
+ * turned the website's own built-in photos off. Uploaded photos are added after whatever is left.
  *
- * If the request fails, or the backend isn't set up, the built-in photos are shown alone.
+ * If the request fails, or the backend isn't set up, the built-in photos are shown as they are.
  */
 
 type ManagedPhoto = {
@@ -22,6 +21,8 @@ type ManagedPhoto = {
   wide: boolean;
 };
 
+type PhotosResponse = { photos?: ManagedPhoto[]; hiddenBuiltin?: string[] };
+
 const toImage = (photo: ManagedPhoto): GalleryImage => ({
   src: photo.src,
   thumb: photo.thumb,
@@ -29,43 +30,62 @@ const toImage = (photo: ManagedPhoto): GalleryImage => ({
   wide: photo.wide,
 });
 
-/** Built-in collections with the uploaded photos added to the right sections. */
-export function mergeCollections(base: Collection[], managed: ManagedPhoto[]): Collection[] {
-  if (!managed.length) return base;
+/** Built-in collections, with uploaded photos added and switched-off built-ins taken out. */
+export function mergeCollections(
+  base: Collection[],
+  managed: ManagedPhoto[],
+  hiddenBuiltin: string[] = [],
+): Collection[] {
+  const hidden = new Set(hiddenBuiltin);
+  if (!managed.length && hidden.size === 0) return base;
 
   return base.map((collection) => {
     const mine = managed.filter((photo) => photo.collection === collection.id);
-    if (!mine.length) return collection;
+    const hidesAnything = collection.categories.some((category) => hidden.has(category.id));
+    if (!mine.length && !hidesAnything) return collection;
+
+    // Built-in photos in a switched-off section go from that tab and from "All" alike.
+    const droppedSources = new Set<string>();
+    for (const category of collection.categories) {
+      if (hidden.has(category.id)) {
+        for (const image of category.images) droppedSources.add(image.src);
+      }
+    }
 
     const categories = collection.categories.map((category) => {
-      const extra = mine.filter((photo) => photo.category === category.id);
-      return extra.length ? { ...category, images: [...category.images, ...extra.map(toImage)] } : category;
+      const extra = mine.filter((photo) => photo.category === category.id).map(toImage);
+      const kept = hidden.has(category.id) ? [] : category.images;
+      if (!extra.length && kept === category.images) return category;
+      return { ...category, images: [...kept, ...extra] };
     });
 
-    // "All" shows every photo in the collection, uploaded ones included.
-    return { ...collection, all: [...collection.all, ...mine.map(toImage)], categories };
+    const all = [...collection.all.filter((image) => !droppedSources.has(image.src)), ...mine.map(toImage)];
+    return { ...collection, all, categories };
   });
 }
 
-async function fetchManaged(signal: AbortSignal): Promise<ManagedPhoto[]> {
+async function fetchPhotos(signal: AbortSignal): Promise<PhotosResponse> {
   const response = await fetch('/api/photos', { signal });
-  if (!response.ok) return [];
-  const body = (await response.json()) as { photos?: ManagedPhoto[] };
-  return Array.isArray(body.photos) ? body.photos : [];
+  if (!response.ok) return {};
+  return (await response.json()) as PhotosResponse;
 }
 
 export function useCollections(): Collection[] {
   const [managed, setManaged] = useState<ManagedPhoto[]>([]);
+  const [hiddenBuiltin, setHiddenBuiltin] = useState<string[]>([]);
 
   useEffect(() => {
     const controller = new AbortController();
-    fetchManaged(controller.signal)
-      .then(setManaged)
+    fetchPhotos(controller.signal)
+      .then((body) => {
+        setManaged(Array.isArray(body.photos) ? body.photos : []);
+        setHiddenBuiltin(Array.isArray(body.hiddenBuiltin) ? body.hiddenBuiltin : []);
+      })
       .catch(() => {
         /* offline, or the backend isn't set up — the built-in photos are enough */
       });
     return () => controller.abort();
   }, []);
 
-  return useMemo(() => mergeCollections(builtIn, managed), [managed]);
+  return useMemo(() => mergeCollections(builtIn, managed, hiddenBuiltin), [managed, hiddenBuiltin]);
 }
