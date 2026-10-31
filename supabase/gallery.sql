@@ -61,6 +61,9 @@ create policy "Admins can remove gallery photos" on public.gallery_photos
 
 revoke all on public.gallery_photos from anon, authenticated;
 grant select, insert, update, delete on public.gallery_photos to authenticated;
+-- The website's server function reads with the secret key, which acts as service_role.
+-- Without this it gets "permission denied" (SQL state 42501), which PostgREST reports as a 401.
+grant select, insert, update, delete on public.gallery_photos to service_role;
 
 -- 3. Where the picture files are kept ----------------------------------------------------------
 -- A public bucket: the files are pictures on a public website, so anyone may view them,
