@@ -23,14 +23,15 @@ type Row = {
   wide: boolean;
 };
 
-const empty = () =>
+/** Why the list came back empty, so the website's galleries can be checked from outside. Never includes the key. */
+const empty = (why: string) =>
   new Response(JSON.stringify({ photos: [] }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Photos-Source': why },
   });
 
 export async function GET() {
-  if (!supabaseConfigured()) return empty();
+  if (!supabaseConfigured()) return empty('not-configured');
 
   let rows: Row[];
   try {
@@ -40,9 +41,10 @@ export async function GET() {
         '&is_published=eq.true' +
         '&order=collection.asc,category.asc,sort_order.asc,created_at.asc',
     );
-  } catch {
+  } catch (error) {
     // A database hiccup must not empty the galleries: the website keeps its built-in photos.
-    return empty();
+    const status = (error instanceof Error ? error.message.match(/\((\d{3})\)/) : null)?.[1] ?? 'failed';
+    return empty(`query-${status}`);
   }
 
   const photos = rows.map((row) => ({
@@ -57,7 +59,7 @@ export async function GET() {
 
   return new Response(JSON.stringify({ photos }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': CACHE },
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': CACHE, 'X-Photos-Source': 'database' },
   });
 }
 
