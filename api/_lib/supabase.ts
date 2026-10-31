@@ -3,19 +3,16 @@
  * Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in Vercel → Settings → Environment Variables.
  */
 
-const url = process.env.SUPABASE_URL?.replace(/\/+$/, '');
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Trimmed: a stray space or line break pasted with the value makes Supabase answer 401.
+const url = process.env.SUPABASE_URL?.trim().replace(/\/+$/, '');
+const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
 export const supabaseConfigured = () => Boolean(url && key);
 
 function headers(prefer?: string): Record<string, string> {
-  // Both the legacy service_role key (a JWT) and the newer sb_secret_ keys are sent as a bearer token;
-  // Supabase answers 401 if the secret key arrives in apikey alone.
-  const result: Record<string, string> = {
-    apikey: key!,
-    Authorization: `Bearer ${key}`,
-    'Content-Type': 'application/json',
-  };
+  const result: Record<string, string> = { apikey: key!, 'Content-Type': 'application/json' };
+  // Legacy service_role keys are JWTs and also go in Authorization; the newer sb_secret_ keys go in apikey only.
+  if (key!.startsWith('eyJ')) result.Authorization = `Bearer ${key}`;
   if (prefer) result.Prefer = prefer;
   return result;
 }
