@@ -54,6 +54,20 @@ const toImage = (photo: ManagedPhoto): GalleryImage => ({
   wide: photo.wide,
 });
 
+/**
+ * The website's own photo addresses are relative to the website, like /assets/chairs-01.webp.
+ * The admin panel runs on a different address, so the catalogue has to carry whole addresses
+ * or the panel shows names with no pictures.
+ */
+function wholeAddress(path: string): string {
+  if (/^https?:/i.test(path)) return path;
+  try {
+    return new URL(path, window.location.origin).href;
+  } catch {
+    return path;
+  }
+}
+
 /** Every built-in photo, with the section it sits in and its steady name. */
 function buildCatalog(base: Collection[]): CatalogEntry[] {
   const entries: CatalogEntry[] = [];
@@ -65,8 +79,8 @@ function buildCatalog(base: Collection[]): CatalogEntry[] {
           collection: collection.id,
           category: category.id,
           id: image.id,
-          src: image.src,
-          thumb: image.thumb,
+          src: wholeAddress(image.src),
+          thumb: wholeAddress(image.thumb),
           alt: image.alt,
           wide: image.wide,
           position: index,
