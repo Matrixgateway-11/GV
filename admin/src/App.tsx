@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 import Enquiries from './components/Enquiries';
 import { Login, NewPassword } from './components/Login';
 import Overview from './components/Overview';
+import Photos from './components/Photos';
 import Shell, { type Page } from './components/Shell';
 import { Spinner } from './components/ui';
 import { useAuth } from './lib/auth';
@@ -14,7 +15,7 @@ const backend: Backend = supabase ? liveBackend(supabase) : demoBackend;
 
 function Panel({ email, onSignOut }: { email: string; onSignOut: () => void }) {
   const [segments, go] = useHashPath();
-  const page: Page = segments[0] === 'enquiries' ? 'enquiries' : 'overview';
+  const page: Page = segments[0] === 'enquiries' ? 'enquiries' : segments[0] === 'photos' ? 'photos' : 'overview';
   const selectedId = page === 'enquiries' ? (segments[1] ?? null) : null;
   const [includeTest, setIncludeTest] = useStoredState('gv-admin-include-test', false);
 
@@ -41,11 +42,13 @@ function Panel({ email, onSignOut }: { email: string; onSignOut: () => void }) {
     [setData],
   );
 
-  const navigate = (next: Page) => go(next === 'enquiries' ? '/enquiries' : '/');
+  const navigate = (next: Page) => go(next === 'overview' ? '/' : '/' + next);
 
   return (
     <Shell page={page} onNavigate={navigate} email={email} newCount={newCount} demo={backend.mode === 'demo'} onSignOut={onSignOut}>
-      {page === 'enquiries' ? (
+      {page === 'photos' ? (
+        <Photos email={email} />
+      ) : page === 'enquiries' ? (
         <Enquiries
           enquiries={enquiries}
           includeTest={includeTest}
