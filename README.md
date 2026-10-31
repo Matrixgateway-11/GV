@@ -54,6 +54,23 @@ Delivery (`src/lib/enquiry.ts` → `api/enquiry.ts`):
 - `api/enquiry.ts` — stores and emails enquiries; validates on the server, spam trap, max 5 per hour per sender.
 - `supabase/schema.sql` — the database tables, access rules and dashboard queries (run once in Supabase).
 
+## Adding furniture photos from the admin panel
+
+The photos built into the site live in `src/assets/gallery` and are picked per category in
+`src/data/collections.ts`. On top of those, an admin can upload photos from the panel and they
+appear on the website within a minute — nothing is rebuilt.
+
+- **Photos** tab in `admin/` — pick a section, drop pictures in, reorder them, hide one from the
+  website or remove it. Both sizes (1600px for the viewer, 640px for the grid) are made in the
+  browser before uploading, so a phone photo never reaches visitors at full size.
+- `api/photos.ts` — what the website reads. Returns an empty list if Supabase is unset or the
+  query fails, so the galleries fall back to the built-in photos instead of going blank. The
+  `X-Photos-Source` header says which happened (`database`, `not-configured`, `query-<status>`).
+- `src/data/managedPhotos.ts` — merges the uploaded photos into the built-in collections.
+- `supabase/gallery.sql` — the `gallery_photos` table and the public `gallery` storage bucket.
+  Run it after `schema.sql`. Anyone may view the pictures; only emails in `admin_users` may
+  add, change or remove them.
+
 Website environment variables (Vercel → the website project → Settings → Environment Variables):
 
 | Variable | What it is |
@@ -95,6 +112,7 @@ tailwind.config.js    cream / bark / gold / sage palette, fonts, keyframes (incl
 public/               favicon.png, apple-touch-icon.png, flags/ (country flags, from country-flag-icons, MIT)
 api/                  Vercel server functions: enquiry.ts, track.ts (+ _lib/ helpers)
 supabase/schema.sql   database setup for enquiries, visits and the admin panel
+supabase/gallery.sql  database setup for photos added from the admin panel
 admin/                the admin panel (separate app — see admin/README.md)
 ```
 
