@@ -9,6 +9,10 @@
 import { doorsFeature, flooringFeature } from './stock';
 
 export type GalleryImage = {
+  /** Steady name for a photo built into the site, e.g. "indoor-07", so the admin panel can
+   *  point at one even though the built file name changes with every build. Photos that come
+   *  from somewhere else don't have one and can't be hidden one at a time. */
+  id?: string;
   src: string;
   thumb: string;
   alt: string;
@@ -51,6 +55,7 @@ export function photo(folder: Folder, n: number): GalleryImage {
   const thumb = files[`../assets/gallery/${folder}/${name}-thumb.webp`];
   if (!src || !thumb) throw new Error(`Missing gallery photo: ${folder}/${name}`);
   return {
+    id: name,
     src,
     thumb,
     alt: `${labels[folder]} by Golden Village Furnitures — photo ${n}`,
