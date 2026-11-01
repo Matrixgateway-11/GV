@@ -24,6 +24,10 @@ function explain(body: { error?: string; detail?: string }, status: number): str
       return 'You cannot take away your own access. Ask another admin to do it.';
     case 'not_on_list':
       return 'That email was not on the list.';
+    case 'password_too_short':
+      return 'A password needs at least 8 characters.';
+    case 'create_failed':
+      return 'The account could not be made: ' + (body.detail || 'unknown reason') + '.';
     default:
       return body.detail || 'Something went wrong (' + status + ').';
   }
@@ -52,13 +56,28 @@ export async function listAdmins(): Promise<{ admins: AdminUser[]; you: string }
   return { admins: body.admins ?? [], you: body.you ?? '' };
 }
 
-/** Adds them to the list and emails an invitation to choose a password. */
-export async function inviteAdmin(email: string): Promise<{ invited: boolean; alreadyHasAccount: boolean }> {
-  const body = (await call('/api/users', { method: 'POST', body: JSON.stringify({ email }) })) as {
+/**
+ * Adds them to the admin list and gives them a way in.
+ * With a password the account is ready at once; without one they get an invitation email
+ * and choose their own.
+ */
+export async function addAdmin(
+  email: string,
+  password?: string,
+): Promise<{ invited: boolean; created: boolean; alreadyHasAccount: boolean }> {
+  const payload: { email: string; password?: string } = { email };
+  if (password) payload.password = password;
+
+  const body = (await call('/api/users', { method: 'POST', body: JSON.stringify(payload) })) as {
     invited?: boolean;
+    created?: boolean;
     alreadyHasAccount?: boolean;
   };
-  return { invited: Boolean(body.invited), alreadyHasAccount: Boolean(body.alreadyHasAccount) };
+  return {
+    invited: Boolean(body.invited),
+    created: Boolean(body.created),
+    alreadyHasAccount: Boolean(body.alreadyHasAccount),
+  };
 }
 
 /** Takes away access. Their sign-in account stays, so nothing else of theirs is touched. */
