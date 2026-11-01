@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
-import { ExternalLink, Images, Inbox, LayoutDashboard, LogOut } from 'lucide-react';
+import { ExternalLink, Images, Inbox, LayoutDashboard, LogOut, ShieldCheck } from 'lucide-react';
 import { BrandLogo } from './ui';
 
-export type Page = 'overview' | 'enquiries' | 'photos';
+export type Page = 'overview' | 'enquiries' | 'photos' | 'admins';
 
 type ShellProps = {
   page: Page;
@@ -20,6 +20,7 @@ const navItems: { page: Page; label: string; icon: ReactNode }[] = [
   { page: 'overview', label: 'Overview', icon: <LayoutDashboard size={18} /> },
   { page: 'enquiries', label: 'Enquiries', icon: <Inbox size={18} /> },
   { page: 'photos', label: 'Photos', icon: <Images size={18} /> },
+  { page: 'admins', label: 'Admins', icon: <ShieldCheck size={18} /> },
 ];
 
 /** Sidebar on large screens; a top bar with tabs on phones and tablets. */
