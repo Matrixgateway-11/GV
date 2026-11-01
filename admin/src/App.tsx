@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from 'react';
+import Admins from './components/Admins';
 import Enquiries from './components/Enquiries';
 import { Login, NewPassword } from './components/Login';
 import Overview from './components/Overview';
@@ -15,7 +16,14 @@ const backend: Backend = supabase ? liveBackend(supabase) : demoBackend;
 
 function Panel({ email, onSignOut }: { email: string; onSignOut: () => void }) {
   const [segments, go] = useHashPath();
-  const page: Page = segments[0] === 'enquiries' ? 'enquiries' : segments[0] === 'photos' ? 'photos' : 'overview';
+  const page: Page =
+    segments[0] === 'enquiries'
+      ? 'enquiries'
+      : segments[0] === 'photos'
+        ? 'photos'
+        : segments[0] === 'admins'
+          ? 'admins'
+          : 'overview';
   const selectedId = page === 'enquiries' ? (segments[1] ?? null) : null;
   const [includeTest, setIncludeTest] = useStoredState('gv-admin-include-test', false);
 
@@ -46,7 +54,9 @@ function Panel({ email, onSignOut }: { email: string; onSignOut: () => void }) {
 
   return (
     <Shell page={page} onNavigate={navigate} email={email} newCount={newCount} demo={backend.mode === 'demo'} onSignOut={onSignOut}>
-      {page === 'photos' ? (
+      {page === 'admins' ? (
+        <Admins email={email} />
+      ) : page === 'photos' ? (
         <Photos email={email} />
       ) : page === 'enquiries' ? (
         <Enquiries
