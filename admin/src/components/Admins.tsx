@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Mail, ShieldCheck, UserPlus, X } from 'lucide-react';
-import { inviteAdmin, listAdmins, removeAdmin } from '../lib/admins';
+import { addAdmin, listAdmins, removeAdmin } from '../lib/admins';
 import { useAsync } from '../lib/hooks';
 import { supabase } from '../lib/supabase';
-import { Button, Card, EmptyState, ErrorNote, Spinner } from './ui';
+import { Button, Card, EmptyState, ErrorNote, Spinner, Toggle } from './ui';
 
 /**
  * "Admins" — who can sign in to this panel.
@@ -15,6 +15,9 @@ export default function Admins({ email }: { email: string }) {
   const { reload } = people;
 
   const [newEmail, setNewEmail] = useState('');
+  /** Set a password here, or leave it blank and send an invitation instead. */
+  const [setPassword, setSetPassword] = useState(true);
+  const [newPassword, setNewPassword] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
@@ -60,32 +63,67 @@ export default function Admins({ email }: { email: string }) {
 
       <Card title="Invite someone">
         <form
-          className="flex flex-wrap items-center gap-2"
+          className="space-y-3"
           onSubmit={(event) => {
             event.preventDefault();
             const address = newEmail.trim();
+            const chosen = setPassword ? newPassword : '';
             if (!address) return;
             run(async () => {
-              const result = await inviteAdmin(address);
+              const result = await addAdmin(address, chosen || undefined);
               setNewEmail('');
-              setNote(
-                result.alreadyHasAccount
-                  ? address + ' already had an account, so they can sign in straight away.'
-                  : 'Invitation sent to ' + address + '. They choose their own password from the email.',
-              );
-            }, 'Inviting…');
+              setNewPassword('');
+              if (result.alreadyHasAccount) {
+                setNote(address + ' already had an account, so they can sign in with the password they already use.');
+              } else if (result.created) {
+                setNote('Account made for ' + address + '. Give them the password you just set — they can sign in now.');
+              } else {
+                setNote('Invitation sent to ' + address + '. They choose their own password from the email.');
+              }
+            }, setPassword ? 'Making the account…' : 'Inviting…');
           }}
         >
-          <input
-            type="email"
-            value={newEmail}
-            onChange={(event) => setNewEmail(event.target.value)}
-            placeholder="name@company.com"
-            className="min-w-[16rem] flex-1 rounded-xl border border-bark-900/20 bg-white px-4 py-2.5 text-[14px] text-bark-900 focus:border-gold-400 focus:outline-none"
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              type="email"
+              value={newEmail}
+              onChange={(event) => setNewEmail(event.target.value)}
+              placeholder="name@company.com"
+              className="min-w-[16rem] flex-1 rounded-xl border border-bark-900/20 bg-white px-4 py-2.5 text-[14px] text-bark-900 focus:border-gold-400 focus:outline-none"
+            />
+            {setPassword && (
+              <input
+                type="text"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+                placeholder="password (8+ characters)"
+                minLength={8}
+                className="min-w-[14rem] flex-1 rounded-xl border border-bark-900/20 bg-white px-4 py-2.5 text-[14px] text-bark-900 focus:border-gold-400 focus:outline-none"
+              />
+            )}
+            <Button
+              variant="primary"
+              type="submit"
+              icon={<UserPlus size={16} />}
+              disabled={!newEmail.trim() || (setPassword && newPassword.trim().length < 8) || Boolean(busy)}
+            >
+              {setPassword ? 'Create account' : 'Send invitation'}
+            </Button>
+          </div>
+
+          <Toggle
+            checked={setPassword}
+            onChange={(next) => {
+              setSetPassword(next);
+              setNewPassword('');
+            }}
+            label="Set their password myself"
           />
-          <Button variant="primary" type="submit" icon={<UserPlus size={16} />} disabled={!newEmail.trim() || Boolean(busy)}>
-            Send invitation
-          </Button>
+          <p className="text-[12.5px] leading-relaxed text-bark-700/65">
+            {setPassword
+              ? 'The account works immediately. Pass the password on to them safely, and ask them to change it from the sign-in page afterwards.'
+              : 'They get an email with a link and choose their own password. Nobody else ever sees it.'}
+          </p>
         </form>
 
         {busy && (
