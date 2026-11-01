@@ -92,13 +92,31 @@ anything added here appears after them.
 If an upload fails, nothing is left behind: the uploaded files are removed again when the database row
 cannot be saved.
 
+## Admins
+
+The **Admins** screen is where people are given access. Type their email, send the invitation,
+and they get a link to choose their own password — nobody sets a password for anyone else.
+The × beside a name takes their access away; their sign-in account itself is left alone, and
+you cannot remove your own access.
+
+It runs through `admin/api/users.ts`, a small server function beside the panel, because the
+secret key it needs must never reach a browser. Every call checks two things: the sign-in token
+is genuine, and the person behind it is already on the admin list.
+
+That function needs `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` on the **admin** Vercel
+project (its own copy — Vercel keeps variables per project). Without them the screen says so
+rather than failing quietly.
+
+Invitations go through Supabase's built-in email, which allows only a few per hour on the free
+plan. That is plenty for adding colleagues now and then.
+
 ## Day-to-day
 
-- **Add an admin**: Supabase SQL Editor →
-  `insert into public.admin_users (email) values ('name@company.com');`
+- **Add an admin**: the **Admins** screen in the panel. Doing it by hand still works:
+  Supabase SQL Editor → `insert into public.admin_users (email) values ('name@company.com');`
   then Authentication → Users → Add user with that email.
-- **Remove an admin**: `delete from public.admin_users where email = 'name@company.com';`
-  and delete the user under Authentication → Users.
+- **Remove an admin**: the × on the **Admins** screen, or
+  `delete from public.admin_users where email = 'name@company.com';`
 - **Change who receives enquiry emails**: edit `ENQUIRY_TO` in the website project and redeploy.
 - **Check the website is reading uploaded photos**: open `/api/photos` on the live site and look at the
   `X-Photos-Source` header — `database` means it is, `not-configured` or `query-<status>` means it is not.
