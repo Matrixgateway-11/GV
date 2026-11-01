@@ -83,9 +83,9 @@ export async function POST(request: Request) {
   const check = await allow(request);
   if ('reply' in check) return check.reply;
 
-  let body: { email?: unknown };
+  let body: { email?: unknown; password?: unknown };
   try {
-    body = (await request.json()) as { email?: unknown };
+    body = (await request.json()) as { email?: unknown; password?: unknown };
   } catch {
     return json({ error: 'invalid_json' }, 400);
   }
@@ -93,13 +93,34 @@ export async function POST(request: Request) {
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
   if (!looksLikeEmail(email)) return json({ error: 'invalid_email' }, 422);
 
-  // On the list first, so the invite link works the moment they follow it.
+  // A password means the admin is setting the account up themselves; no password means
+  // we email an invitation and the person chooses their own.
+  const password = typeof body.password === 'string' ? body.password : '';
+  if (password && password.length < 8) return json({ error: 'password_too_short' }, 422);
+
+  // On the list first, so the account works the moment it exists.
   const added = await fetch(`${url}/rest/v1/admin_users`, {
     method: 'POST',
     headers: serviceHeaders('resolution=ignore-duplicates,return=minimal'),
     body: JSON.stringify({ email }),
   });
   if (!added.ok) return json({ error: 'add_failed', detail: (await added.text()).slice(0, 200) }, 500);
+
+  if (password) {
+    // Made ready to use straight away: no confirmation email to wait for.
+    const created = await fetch(`${url}/auth/v1/admin/users`, {
+      method: 'POST',
+      headers: serviceHeaders(),
+      body: JSON.stringify({ email, password, email_confirm: true }),
+    });
+    if (created.ok) return json({ ok: true, email, created: true });
+
+    const detail = (await created.text()).slice(0, 300);
+    if (created.status === 422 || /already|exists|registered/i.test(detail)) {
+      return json({ ok: true, email, created: false, alreadyHasAccount: true });
+    }
+    return json({ error: 'create_failed', detail }, 500);
+  }
 
   // Invite them to pick a password. Someone who already has an account just keeps it.
   const invited = await fetch(`${url}/auth/v1/invite`, {
